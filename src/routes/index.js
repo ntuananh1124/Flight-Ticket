@@ -2,6 +2,7 @@ import LayoutAdmin from "../layout/LayoutAdmin";
 import LayoutDefault from "../layout/LayoutDefault";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 export const routes = [
     {
@@ -21,5 +22,9 @@ export const routes = [
     {
         path: 'login',
         element: <Login />
+    },
+    {
+        path: 'register',
+        element: <Register />
     }
 ]

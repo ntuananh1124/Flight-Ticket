@@ -43,7 +43,7 @@ export default function LayoutDefault() {
                                         <NavLink to='/login' color='primary'>ĐĂNG NHẬP</NavLink>
                                     </Button>
                                     <Button color='primary' variant="contained">
-                                        <NavLink style={{color: 'white'}}>ĐĂNG KÍ</NavLink>
+                                        <NavLink to='/register' style={{color: 'white'}}>ĐĂNG KÍ</NavLink>
                                     </Button>
                                 </div>
                             </>}

@@ -1,0 +1,42 @@
+@import '../../styles/mixins';
+
+.register-main {
+    background-image: url('../../image/bg.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    @include flex-center();
+}
+
+.register {
+    &__form {
+        width: 500px;
+        // border: 1px solid rgb(181, 181, 181);
+        align-self: center;
+        margin: 80px 0 80px 0;
+        border-radius: 15px;
+        background-color: rgba(218, 218, 218, 0.505);
+        box-shadow: rgba(106, 106, 106, 0.24) 0px 3px 8px;
+
+        &__logo {
+            width: 100px;
+            margin: 0 auto;
+
+            & img {
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        &__main {
+            @include flex-center();
+            padding: 30px 20px;
+
+            & h5 {
+                text-align: center;
+            }
+        }
+    }
+}
