@@ -1,0 +1,13 @@
+@import '../../styles/mixins';
+
+.section-1 {
+    @include flex-center();
+    margin-top: 480px;
+    & .search {
+        width: 70%;
+        height: 150px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+}
