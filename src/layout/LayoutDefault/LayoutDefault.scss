@@ -47,13 +47,64 @@ header {
                 &:hover {
                     color: $main-color;
 
-                    &::after {
+                    // &::after {
+                    //     display: block;
+                    //     width: 100%;
+                    //     right: 0;
+                    //     // left: ;
+                    // }
+                }
+            }
+        }
+
+        &__li-have-menu {
+            position: relative;
+
+            & a {
+                @include flex-center();
+                gap: 5px;
+            }
+
+            &:hover .header__nav__dropdown {
+                display: block;         
+            }
+
+            & ul {
+                gap: unset;
+            }
+        }
+
+        &__dropdown {
+            position: absolute;
+            display: none;
+            left: 0;
+            top: 100%;
+            width: 200%;
+            // background-color: rgba(255, 255, 255, 0.222) !important;
+            
+            & ul {
+                @include d-flex();
+                flex-direction: column;
+
+                & li {
+                    color: rgb(0, 0, 0);
+
+                    &:hover .header__nav__dropdown__sec {
                         display: block;
-                        width: 100%;
-                        right: 0;
-                        // left: ;
                     }
                 }
+            }
+
+            &__sec {
+                position: absolute;
+                display: none;
+                left: 100%;
+                top: 0;
+
+                & ul li {
+                    width: 300%;
+                }
+                // margin-left: 20px;
             }
         }
     }
@@ -63,6 +114,10 @@ header {
             @include d-flex();
             gap: 30px;
         }
+
+        // &__user {
+        //     margin-bottom: 10px;
+        // }
     }
 }
 

@@ -1,4 +1,5 @@
 @import '../../styles/mixins';
+@import '../../styles/var';
 
 .section-1 {
     @include flex-center();
@@ -10,4 +11,72 @@
         border-radius: 10px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
+}
+
+.section-2 {
+    margin-top: 80px;
+
+    &__main {
+        @include flex-center();
+        flex-direction: column;
+        gap: 20px;
+
+        &__title {
+            color: $second-color;
+        }
+
+        &__content {
+            &__inner {
+                background-color: rgba(255, 255, 255, 0.658);
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                cursor: default;
+
+                &:hover {
+                    img {
+                        scale: 1.3;
+                    }
+                }
+
+                &__img {
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+
+
+                    img {
+                        width: 100%;
+                        transition: .5s ease-in-out; 
+                    }
+                }
+
+                &__desc {
+                    padding: 15px;
+                    & h4 {
+                        font-size: 24px;
+                    }
+
+                    & p {
+                        margin-top: 5px;
+                        font-size: 17px;
+                        color: rgb(150, 150, 150);
+                        line-height: 1.4rem;
+                        height: calc(1.4rem * 5);
+                        overflow: hidden;
+                        display: inline-block;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 5;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.section-3 {
+    margin-top: 80px;
+    background-color: bisque;
+    padding: 80px 0 80px 0;
 }
