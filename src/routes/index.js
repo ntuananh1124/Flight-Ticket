@@ -6,6 +6,8 @@ import Register from "../pages/Register";
 import UserInfo from "../pages/UserInfo";
 import GetTicket from "../pages/GetTicket";
 import AboutUs from "../pages/AboutUs";
+import AdminInfo from "../pages/Admin/AdminInfo";
+import BookingsManagement from "../pages/Admin/BookingsManagement";
 
 export const routes = [
     {
@@ -27,19 +29,30 @@ export const routes = [
             {
                 path: 'about-us',
                 element: <AboutUs />
-            }
+            },
+            ,
+            {
+                path: 'login',
+                element: <Login />
+            },
+            {
+                path: 'register',
+                element: <Register />
+            },
         ]
     },
     {
         path: 'admin',
-        element: <LayoutAdmin />
-    },
-    {
-        path: 'login',
-        element: <Login />
-    },
-    {
-        path: 'register',
-        element: <Register />
+        element: <LayoutAdmin />,
+        children: [
+            {
+                index: true,
+                element: <AdminInfo />
+            },
+            {
+                path: 'bookings',
+                element: <BookingsManagement />
+            }
+        ]
     }
 ]

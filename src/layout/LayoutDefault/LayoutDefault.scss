@@ -121,8 +121,20 @@ header {
     }
 }
 
+html, body {
+    // height: 100% !important;
+    margin: 0 !important;
+}
+
+main {
+    flex: 1;
+}
+
 .content-wrapper {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .footer {

@@ -1,0 +1,19 @@
+.custom-toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.admin {
+    display: flex;
+    gap: 15px;
+
+    &__info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        &__name {
+            color: white;
+        }
+    }
+}

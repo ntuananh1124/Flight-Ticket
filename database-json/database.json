@@ -1,56 +1,162 @@
 {
     "Users": [
-        { "id": 1, "username": "john_doe", "email": "john@example.com", "phone": "0901234567" },
-        { "id": 2, "username": "jane_smith", "email": "jane@example.com", "phone": "0912345678" }
+        {
+        "user_id": 1,
+        "name": "Nguyễn Văn A",
+        "email": "vana@gmail.com",
+        "password": "123456",
+        "phone_number": "0909123456"
+        },
+        {
+        "user_id": 2,
+        "name": "Trần Thị B",
+        "email": "thib@gmail.com",
+        "password": "abcdef",
+        "phone_number": "0911222333"
+        }
     ],
     "Admins": [
-        { "id": 1, "username": "admin", "password": "admin123" }
+        {
+        "admin_id": 1,
+        "username": "admin1",
+        "password": "adminpass",
+        "role": "Manager"
+        },
+        {
+        "admin_id": 2,
+        "username": "staff1",
+        "password": "staffpass",
+        "role": "Staff"
+        }
     ],
     "Airports": [
-        { "id": 1, "name": "Noi Bai International Airport", "location": "Hanoi" },
-        { "id": 2, "name": "Tan Son Nhat International Airport", "location": "Ho Chi Minh City" }
+        {
+        "airport_id": 1,
+        "name": "Tân Sơn Nhất",
+        "code": "SGN",
+        "location": "Hồ Chí Minh"
+        },
+        {
+        "airport_id": 2,
+        "name": "Nội Bài",
+        "code": "HAN",
+        "location": "Hà Nội"
+        }
     ],
-    "Planes": [
-        { "id": 1, "model": "Airbus A320", "capacity": 180 },
-        { "id": 2, "model": "Boeing 737", "capacity": 160 }
+    "Airplanes": [
+        {
+        "airplane_id": 1,
+        "model": "Airbus A320",
+        "capacity": 180
+        },
+        {
+        "airplane_id": 2,
+        "model": "Boeing 737",
+        "capacity": 160
+        }
     ],
-    "SeatMaps": [
-        { "id": 1, "plane_id": 1, "seat_layout": "6x30", "description": "6 hàng x 30 dãy" },
-        { "id": 2, "plane_id": 2, "seat_layout": "4x25", "description": "4 hàng x 25 dãy" }
+    "Airlines": [
+        {
+        "airline_id": 1,
+        "name": "Vietnam Airlines",
+        "image": "vietnam_airlines.png",
+        "description": "Vietnam Airlines là hãng hàng không quốc gia, cung cấp dịch vụ bay nội địa và quốc tế chất lượng cao."
+        },
+        {
+        "airline_id": 2,
+        "name": "Qatar Airways",
+        "image": "qatar_airways.png",
+        "description": "Qatar Airways là hãng hàng không quốc tế nổi tiếng với dịch vụ cao cấp, trụ sở tại Doha, Qatar."
+        },
+        {
+        "airline_id": 3,
+        "name": "Bamboo Airways",
+        "image": "bamboo_airways.png",
+        "description": "Bamboo Airways là hãng hàng không tư nhân của Việt Nam, nổi bật với dịch vụ thân thiện và chuyến bay đúng giờ."
+        },
+        {
+        "airline_id": 4,
+        "name": "Vietjet Air",
+        "image": "vietjet_air.png",
+        "description": "Vietjet Air là hãng hàng không giá rẻ hàng đầu Việt Nam với mạng lưới bay rộng khắp."
+        }
+    ],
+    "Routes": [
+        {
+        "route_id": 1,
+        "from_airport": 1,
+        "to_airport": 2,
+        "distance_km": 1160
+        }
     ],
     "Flights": [
         {
-        "id": 1,
-        "plane_id": 1,
-        "departure_airport_id": 1,
-        "arrival_airport_id": 2,
+        "flight_id": 1,
+        "airplane_id": 1,
+        "route_id": 1,
         "departure_time": "2025-06-01T08:00:00",
-        "arrival_time": "2025-06-01T10:00:00",
-        "price": 150
+        "arrival_time": "2025-06-01T10:10:00",
+        "status": "On Time",
+        "airline_id": 1
+        }
+    ],
+    "Seats": [
+        {
+        "seat_id": 1,
+        "airplane_id": 1,
+        "seat_number": "A1",
+        "class": "Economy"
+        },
+        {
+        "seat_id": 2,
+        "airplane_id": 1,
+        "seat_number": "B1",
+        "class": "Business"
+        }
+    ],
+    "FlightPrices": [
+        {
+        "id": 1,
+        "flight_id": 1,
+        "class": "Economy",
+        "price": 150.00
         },
         {
         "id": 2,
-        "plane_id": 2,
-        "departure_airport_id": 2,
-        "arrival_airport_id": 1,
-        "departure_time": "2025-06-02T14:00:00",
-        "arrival_time": "2025-06-02T16:00:00",
-        "price": 160
+        "flight_id": 1,
+        "class": "Business",
+        "price": 300.00
+        },
+        {
+        "id": 3,
+        "flight_id": 1,
+        "class": "First",
+        "price": 450.00
+        }
+    ],
+    "Bookings": [
+        {
+        "booking_id": 1,
+        "user_id": 1,
+        "flight_id": 1,
+        "status": "Paid"
+        }
+    ],
+    "Payments": [
+        {
+        "payment_id": 1,
+        "booking_id": 1,
+        "amount": 1500000,
+        "payment_method": "VISA"
         }
     ],
     "Tickets": [
-        { "id": 1, "flight_id": 1, "seat_number": "12A", "class": "Economy", "price": 150 },
-        { "id": 2, "flight_id": 1, "seat_number": "12B", "class": "Economy", "price": 150 }
-    ],
-    "Bookings": [
-        { "id": 1, "user_id": 1, "flight_id": 1, "booking_date": "2025-05-20", "status": "Confirmed" },
-        { "id": 2, "user_id": 2, "flight_id": 2, "booking_date": "2025-05-21", "status": "Pending" }
-    ],
-    "PassengerInfo": [
-        { "id": 1, "booking_id": 1, "full_name": "Nguyen Van A", "dob": "1995-05-05", "passport": "B12345678" },
-        { "id": 2, "booking_id": 1, "full_name": "Tran Thi B", "dob": "1998-09-10", "passport": "B98765432" }
-    ],
-    "Payments": [
-        { "id": 1, "booking_id": 1, "payment_date": "2025-05-20", "amount": 150, "method": "Credit Card", "status": "Paid" }
+        {
+        "ticket_id": 1,
+        "booking_id": 1,
+        "seat_id": 1,
+        "price": 1500000,
+        "ticket_type": "Economy"
+        }
     ]
 }
