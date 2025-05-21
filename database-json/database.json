@@ -1,0 +1,56 @@
+{
+    "Users": [
+        { "id": 1, "username": "john_doe", "email": "john@example.com", "phone": "0901234567" },
+        { "id": 2, "username": "jane_smith", "email": "jane@example.com", "phone": "0912345678" }
+    ],
+    "Admins": [
+        { "id": 1, "username": "admin", "password": "admin123" }
+    ],
+    "Airports": [
+        { "id": 1, "name": "Noi Bai International Airport", "location": "Hanoi" },
+        { "id": 2, "name": "Tan Son Nhat International Airport", "location": "Ho Chi Minh City" }
+    ],
+    "Planes": [
+        { "id": 1, "model": "Airbus A320", "capacity": 180 },
+        { "id": 2, "model": "Boeing 737", "capacity": 160 }
+    ],
+    "SeatMaps": [
+        { "id": 1, "plane_id": 1, "seat_layout": "6x30", "description": "6 hàng x 30 dãy" },
+        { "id": 2, "plane_id": 2, "seat_layout": "4x25", "description": "4 hàng x 25 dãy" }
+    ],
+    "Flights": [
+        {
+        "id": 1,
+        "plane_id": 1,
+        "departure_airport_id": 1,
+        "arrival_airport_id": 2,
+        "departure_time": "2025-06-01T08:00:00",
+        "arrival_time": "2025-06-01T10:00:00",
+        "price": 150
+        },
+        {
+        "id": 2,
+        "plane_id": 2,
+        "departure_airport_id": 2,
+        "arrival_airport_id": 1,
+        "departure_time": "2025-06-02T14:00:00",
+        "arrival_time": "2025-06-02T16:00:00",
+        "price": 160
+        }
+    ],
+    "Tickets": [
+        { "id": 1, "flight_id": 1, "seat_number": "12A", "class": "Economy", "price": 150 },
+        { "id": 2, "flight_id": 1, "seat_number": "12B", "class": "Economy", "price": 150 }
+    ],
+    "Bookings": [
+        { "id": 1, "user_id": 1, "flight_id": 1, "booking_date": "2025-05-20", "status": "Confirmed" },
+        { "id": 2, "user_id": 2, "flight_id": 2, "booking_date": "2025-05-21", "status": "Pending" }
+    ],
+    "PassengerInfo": [
+        { "id": 1, "booking_id": 1, "full_name": "Nguyen Van A", "dob": "1995-05-05", "passport": "B12345678" },
+        { "id": 2, "booking_id": 1, "full_name": "Tran Thi B", "dob": "1998-09-10", "passport": "B98765432" }
+    ],
+    "Payments": [
+        { "id": 1, "booking_id": 1, "payment_date": "2025-05-20", "amount": 150, "method": "Credit Card", "status": "Paid" }
+    ]
+}

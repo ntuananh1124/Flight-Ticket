@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import { Avatar, Menu, MenuItem, Paper } from '@mui/material';
 import { useState } from 'react';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { FaFacebookF } from "react-icons/fa";
 
 export default function LayoutDefault() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -46,6 +47,7 @@ export default function LayoutDefault() {
         };
     }
     const token = 'ntuananh1124';
+    // const isAdmin = false;
     return(
         <>
             <div className="content-wrapper">
@@ -62,7 +64,7 @@ export default function LayoutDefault() {
                                     <NavLink to='/'>Trang chủ</NavLink>
                                 </li>
                                 <li className='header__nav__li-have-menu'>
-                                    <NavLink to='/'>
+                                    <NavLink to='/get-ticket'>
                                         <span>Đặt vé</span>
                                         <ArrowDropDownIcon />
                                     </NavLink>
@@ -95,7 +97,7 @@ export default function LayoutDefault() {
                                     </Paper>
                                 </li>
                                 <li>
-                                    <NavLink to='/'>Về chúng tôi</NavLink>
+                                    <NavLink to='/about-us'>Về chúng tôi</NavLink>
                                 </li>
                                 <li>
                                     <NavLink to='/'>Liên hệ</NavLink>
@@ -120,10 +122,12 @@ export default function LayoutDefault() {
                                             }}
                                         >
                                             <MenuItem onClick={handleClose}>
-                                                <Link to='/user-info'>Profile</Link>
+                                                <Link to='/user-info'>Hồ sơ cá nhân</Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>My Flights</MenuItem>
-                                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <Link to='/login'>Đăng xuất</Link>
+                                            </MenuItem>
                                         </Menu>
                                     </div>
                                 </div>
@@ -143,7 +147,60 @@ export default function LayoutDefault() {
                 <main>
                     <Outlet />
                 </main>
-                <footer></footer>
+                <footer className="footer">
+                    <div className="my-container">
+                        <div className="footer__top">
+                            <div className="footer__column">
+                            <div className="footer__logo">
+                                <img src="/logoFT.png" alt="FLYCORP.VN" />
+                                <p>Follow me</p>
+                                <div className="footer__social">
+                                    <FaFacebookF />
+                                </div>
+                                <img
+                                className="footer__cert"
+                                src="/cert-bct.png"
+                                alt="Đã thông báo BCT"
+                                />
+                            </div>
+                            </div>
+
+                            <div className="footer__column">
+                            <h3>Công ty</h3>
+                            <ul>
+                                <li>Về chúng tôi</li>
+                                <li>Tuyển dụng</li>
+                                <li>Tin tức</li>
+                                <li>Liên hệ</li>
+                            </ul>
+                            </div>
+
+                            <div className="footer__column">
+                            <h3>Thông tin quan trọng</h3>
+                            <ul>
+                                <li>Câu hỏi thường gặp</li>
+                                <li>Chính sách bảo mật</li>
+                                <li>Điều khoản và điều kiện</li>
+                                <li>Thuế, phí và phụ thu</li>
+                                <li>Chính sách hoàn, huỷ, đổi vé</li>
+                            </ul>
+                            </div>
+
+                            <div className="footer__column">
+                            <h3>Liên hệ chúng tôi</h3>
+                            <p>Trường Đại học Kinh doanh và Công nghệ Hà Nội Số 29A, ngõ 124 Vĩnh Tuy, Hai Bà Trưng, Hà Nội</p>
+                            <p>Email: nghiemtuananh2004@gmail.com</p>
+                            <p>Số điện thoại: (+84) 833748190</p>
+                            </div>
+                        </div>
+                        <div className="footer__bottom">
+                            <p>
+                            Miễn trừ trách nhiệm: Flight Ticket là một đại lý tư nhân chuyên cung cấp dịch vụ bán vé máy bay và dịch vụ du lịch khác...
+                            </p>
+                            <p>© 2025 Toàn bộ bản quyền thuộc <b>NHÓM 4 - TH27.09</b></p>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </>
     )

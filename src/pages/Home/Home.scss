@@ -23,6 +23,17 @@
 
         &__title {
             color: $second-color;
+            position: relative;
+            margin-bottom: 10px;
+
+            &::after {
+                content: "";
+                width: 100%;
+                height: 2px;
+                background-color: $main-color;
+                position: absolute;
+                bottom: 0px;
+            }
         }
 
         &__content {
@@ -79,4 +90,61 @@
     margin-top: 80px;
     background-color: bisque;
     padding: 80px 0 80px 0;
+}
+
+.section-4 {
+    // margin-top: 80px;
+    padding: 80px 0 80px 0;
+
+    &__content {
+        @include d-flex();
+        gap: 50px;
+
+        &__left {
+            flex-basis: 40%;
+
+            &__img {
+                width: 100%;
+
+                img {
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+
+        &__right {
+            flex-basis: 60%;
+
+            & ul {
+                display: flex;
+                gap: 40px;
+                flex-direction: column;
+            }
+        }
+    }
+}
+
+.content__right {
+    @include d-flex();
+    gap: 15px;
+
+    &__icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 7px;
+        background-color: $second-color;
+        @include flex-center();
+
+        & img {
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            // height: 100%;
+        }
+    }
+
+    &__text {
+        width: 80%;
+    }
 }

@@ -35,6 +35,11 @@ export default function Register() {
                             <Grid size={12}>
                                 <Button color='primary' style={{color: 'white'}} variant="contained">ĐĂNG KÍ</Button>
                             </Grid>
+                            <Grid size={12}>
+                                <Button color='primary'>
+                                    <Link to='/login'>ĐÃ CÓ TÀI KHOẢN? ĐĂNG NHẬP NGAY?</Link>
+                                </Button>
+                            </Grid>
                         </Grid>
                     </Box>
                 </div>

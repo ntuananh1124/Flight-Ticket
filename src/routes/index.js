@@ -4,6 +4,8 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UserInfo from "../pages/UserInfo";
+import GetTicket from "../pages/GetTicket";
+import AboutUs from "../pages/AboutUs";
 
 export const routes = [
     {
@@ -17,6 +19,14 @@ export const routes = [
             {
                 path: 'user-info',
                 element: <UserInfo />
+            },
+            {
+                path: 'get-ticket',
+                element: <GetTicket />
+            },
+            {
+                path: 'about-us',
+                element: <AboutUs />
             }
         ]
     },
