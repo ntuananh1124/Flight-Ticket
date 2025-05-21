@@ -7,6 +7,7 @@ import Icon1 from '../../image/icon/folder-search.svg';
 import Icon2 from '../../image/icon/map-people.svg';
 import Icon3 from '../../image/icon/mobile-payment.svg';
 import Icon4 from '../../image/icon/notes-edit-search.svg';
+import Search from "../../components/Search/index.js";
 
 export default function Home() {
     return (
@@ -16,9 +17,7 @@ export default function Home() {
             </div>
             {/* Section 1 */}
             <div className="section-1">
-                <div className="search">
-
-                </div>
+                <Search />
             </div>
             {/* Section 2 */}
             <div className="section-2">
