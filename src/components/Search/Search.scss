@@ -3,16 +3,17 @@
 
 .search {
     &__container {
+        width: 100%;
         padding: 40px 25px 40px 25px;
         @include d-flex;
-        margin: 0 auto;
-        // gap: 100px;
-        // justify-content: space-between;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
     }
 
     &__input {
         &-from {
-            // width: 100%;
+            flex-basis: 35%;
         }
         &__icon {
             @include flex-center();
@@ -22,7 +23,7 @@
             border-radius: 50%;
         }
         &-to {
-            // width: 100%;
+            flex-basis: 35%;
         }
     }
 }

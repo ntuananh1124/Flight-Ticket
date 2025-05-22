@@ -1,11 +1,22 @@
 import { useState } from 'react';
-import { Drawer, List, ListItem, IconButton, Toolbar, AppBar, Typography, Button, Avatar } from '@mui/material';
+import { Drawer, List, ListItem, IconButton, Toolbar, AppBar, Typography, Button, Avatar, MenuItem, Menu } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import './Sidebar.scss';
 import { NavLink } from 'react-router';
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const openAnchor = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        // console.log(event.currentTarget);
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -90,10 +101,23 @@ export default function Sidebar() {
                         FLIGHT TICKET ADMIN SITE
                     </Typography>
                     <div className="admin">
-                        <div className="admin__info">
+                        <div className="admin__info" onClick={handleClick}>
                             <Avatar className='avatar-custom' {...stringAvatar('Tuan Anh')} />
                             <span className='admin__info__name'>Tuan Anh</span>
                         </div>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={openAnchor}
+                            onClose={handleClose}
+                            MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={handleClose}>
+                                <span>Chức vụ: Quản lí</span>
+                            </MenuItem>
+                        </Menu>
                         <Button color='primary' variant="outlined" style={{color: 'white'}} onClick={handleLogOut}>
                             ĐĂNG XUẤT
                         </Button>

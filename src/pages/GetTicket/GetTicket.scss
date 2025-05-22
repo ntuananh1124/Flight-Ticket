@@ -1,0 +1,77 @@
+@import "../../styles/var";
+@import "../../styles/mixins";
+
+.get-ticket {
+    padding: 30px 0 30px 0;
+    background-image: url('../../image/getticket-bg.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    &__flight-content {
+        &__filter {
+            padding: 15px 20px;
+        }
+
+        &__inner {
+            padding: 15px;
+            @include d-flex();
+            justify-content: space-between;
+
+            &__airline {
+                @include flex-center();
+                gap: 5px;
+                &__img {
+                    width: 30px;
+                    height: 30px;
+
+                    & img {
+                        width: 100%;
+                        object-fit: center;
+                    }
+                }
+
+                &__name {
+                    font-weight: bold;
+                }
+            }
+            &__route {
+                @include d-flex();
+                gap: 10px;
+                align-items: center;
+
+                &__from {
+                    @include d-flex();
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                &__time {
+                    font-size: 12px;
+                }
+
+                &__to {
+                    @include d-flex();
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+            &__prices {
+                & .class {
+                    @include d-flex();
+                    flex-direction: column;
+                    align-items: center;
+                }
+                & .price {
+                    color: $main-color;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+// custom MUI DateRangePicker
+.css-eqc3kq-MuiFormControl-root-MuiPickersTextField-root {
+    width: 100% !important;
+}

@@ -8,6 +8,8 @@ import GetTicket from "../pages/GetTicket";
 import AboutUs from "../pages/AboutUs";
 import AdminInfo from "../pages/Admin/AdminInfo";
 import BookingsManagement from "../pages/Admin/BookingsManagement";
+import Purchase from "../pages/Purchase";
+import History from "../pages/History";
 
 export const routes = [
     {
@@ -30,7 +32,6 @@ export const routes = [
                 path: 'about-us',
                 element: <AboutUs />
             },
-            ,
             {
                 path: 'login',
                 element: <Login />
@@ -39,6 +40,14 @@ export const routes = [
                 path: 'register',
                 element: <Register />
             },
+            {
+                path: 'purchase',
+                element: <Purchase />
+            },
+            {
+                path: 'user-history',
+                element: <History />
+            }
         ]
     },
     {

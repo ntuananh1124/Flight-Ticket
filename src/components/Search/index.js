@@ -22,7 +22,7 @@ export default function Search() {
                         <TextField fullWidth id="standard-basic" label="Nơi đến" variant="standard" />
                     </div>
                     <div className="search__btn">
-                        <Button>Search</Button>
+                        <Button variant='contained' style={{color: "white"}}>Search</Button>
                     </div>
                 </div>
             </FormGroup>

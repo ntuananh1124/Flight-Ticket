@@ -2,7 +2,7 @@
 @import '../../styles/var';
 
 header {
-    background-color: rgba(255, 255, 255, 0.105);
+    background-color: $main-color;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
@@ -45,7 +45,7 @@ header {
                 }
 
                 &:hover {
-                    color: $main-color;
+                    color: $second-color;
 
                     // &::after {
                     //     display: block;
@@ -100,11 +100,6 @@ header {
                 display: none;
                 left: 100%;
                 top: 0;
-
-                & ul li {
-                    width: 300%;
-                }
-                // margin-left: 20px;
             }
         }
     }

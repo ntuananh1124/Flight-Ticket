@@ -124,7 +124,12 @@ export default function LayoutDefault() {
                                             <MenuItem onClick={handleClose}>
                                                 <Link to='/user-info'>Hồ sơ cá nhân</Link>
                                             </MenuItem>
-                                            <MenuItem onClick={handleClose}>My Flights</MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <Link to='/purchase'>Thanh toán</Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <Link to='/user-history' >Lịch sử</Link>
+                                            </MenuItem>
                                             <MenuItem onClick={handleClose}>
                                                 <Link to='/login'>Đăng xuất</Link>
                                             </MenuItem>
