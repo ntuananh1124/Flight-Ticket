@@ -59,25 +59,25 @@
         {
         "airline_id": 1,
         "name": "Vietnam Airlines",
-        "image": "vietnam_airlines.png",
+        "image": "https://i.postimg.cc/13dQm0PL/vietnam-airlines.png",
         "description": "Vietnam Airlines là hãng hàng không quốc gia, cung cấp dịch vụ bay nội địa và quốc tế chất lượng cao."
         },
         {
         "airline_id": 2,
         "name": "Qatar Airways",
-        "image": "qatar_airways.png",
+        "image": "https://i.postimg.cc/R0nzN3Zq/qatar-airways.jpg",
         "description": "Qatar Airways là hãng hàng không quốc tế nổi tiếng với dịch vụ cao cấp, trụ sở tại Doha, Qatar."
         },
         {
         "airline_id": 3,
         "name": "Bamboo Airways",
-        "image": "bamboo_airways.png",
+        "image": "https://i.postimg.cc/L6HRN6N0/bamboo-airways.jpg",
         "description": "Bamboo Airways là hãng hàng không tư nhân của Việt Nam, nổi bật với dịch vụ thân thiện và chuyến bay đúng giờ."
         },
         {
         "airline_id": 4,
         "name": "Vietjet Air",
-        "image": "vietjet_air.png",
+        "image": "https://i.postimg.cc/7638np7k/vietjet-airlines.jpg",
         "description": "Vietjet Air là hãng hàng không giá rẻ hàng đầu Việt Nam với mạng lưới bay rộng khắp."
         }
     ],
