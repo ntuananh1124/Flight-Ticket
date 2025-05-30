@@ -1,0 +1,19 @@
+@import '../../styles/mixins';
+@import '../../styles/var';
+
+.user-history-main {
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    &__status {
+        @include flex-center();
+        margin-left: 5px;
+        &__inner {
+            background-color: green;
+            padding: 5px;
+            border-radius: 7px;
+            color: white;
+            font-size: 12px;
+        }
+    }
+}

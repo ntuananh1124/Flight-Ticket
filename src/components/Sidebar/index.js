@@ -39,16 +39,16 @@ export default function Sidebar() {
                     <NavLink style={{width: '100%'}} to='/admin'>Hồ sơ</NavLink>
                 </ListItem>
                 <ListItem button>
-                    <NavLink style={{width: '100%'}} to='/'>Quản lí chuyến bay</NavLink>
+                    <NavLink style={{width: '100%'}} to='flights'>Quản lí chuyến bay</NavLink>
                 </ListItem>
                 <ListItem button>
                     <NavLink style={{width: '100%'}} to='bookings'>Bookings</NavLink>
                 </ListItem>
                 <ListItem button>
-                    <NavLink style={{width: '100%'}} to='/'>Máy bay</NavLink>
+                    <NavLink style={{width: '100%'}} to='planes'>Máy bay</NavLink>
                 </ListItem>
                 <ListItem button>
-                    <NavLink style={{width: '100%'}} to='/'>Hãng hàng không</NavLink>
+                    <NavLink style={{width: '100%'}} to='airlines'>Hãng hàng không</NavLink>
                 </ListItem>
             </List>
         </div>

@@ -10,6 +10,10 @@ import AdminInfo from "../pages/Admin/AdminInfo";
 import BookingsManagement from "../pages/Admin/BookingsManagement";
 import Purchase from "../pages/Purchase";
 import History from "../pages/History";
+import FlightsManagement from "../pages/Admin/FlightsManagement";
+import PlanesManagement from "../pages/Admin/PlanesManagement";
+import AirlinesManagement from "../pages/Admin/AirlinesManagement";
+// import CheckOut from "../pages/CheckOut";
 
 export const routes = [
     {
@@ -33,14 +37,6 @@ export const routes = [
                 element: <AboutUs />
             },
             {
-                path: 'login',
-                element: <Login />
-            },
-            {
-                path: 'register',
-                element: <Register />
-            },
-            {
                 path: 'purchase',
                 element: <Purchase />
             },
@@ -49,6 +45,14 @@ export const routes = [
                 element: <History />
             }
         ]
+    },
+    {
+        path: 'login',
+        element: <Login />
+    },
+    {
+        path: 'register',
+        element: <Register />
     },
     {
         path: 'admin',
@@ -61,6 +65,18 @@ export const routes = [
             {
                 path: 'bookings',
                 element: <BookingsManagement />
+            },
+            {
+                path: 'flights',
+                element: <FlightsManagement />
+            },
+            {
+                path: 'planes',
+                element: <PlanesManagement />
+            },
+            {
+                path: 'airlines',
+                element: <AirlinesManagement />
             }
         ]
     }

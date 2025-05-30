@@ -20,7 +20,7 @@ app.use(express.json());
 //     }
 // };
 const dbConfig = {
-    server: 'DESKTOP-0AJOA50\\SQLEXPRESS', // ghép server và instance lại bằng dấu \\
+    server: 'LAPTOP-GR91AMD2\\ABC', // ghép server và instance lại bằng dấu \\
     database: 'Flight_Ticket',
     driver: 'msnodesqlv8',
     options: {

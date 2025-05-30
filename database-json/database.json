@@ -150,6 +150,17 @@
         "payment_method": "VISA"
         }
     ],
+    "Passengers": [
+        {
+        "booking_id": 1,
+        "full_name": "Nguyễn Thị C",
+        "email": "ntc@gmail.com",
+        "phone_number": "0909555666",
+        "date_of_birth": "1995-03-12",
+        "nationality": "Việt Nam",
+        "identity_number": "012345678"
+        }
+    ],
     "Tickets": [
         {
         "ticket_id": 1,
