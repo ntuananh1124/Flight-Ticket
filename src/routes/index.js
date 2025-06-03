@@ -10,9 +10,11 @@ import AdminInfo from "../pages/Admin/AdminInfo";
 import BookingsManagement from "../pages/Admin/BookingsManagement";
 import Purchase from "../pages/Purchase";
 import History from "../pages/History";
+import Contact from "../pages/Contact";
 import FlightsManagement from "../pages/Admin/FlightsManagement";
 import PlanesManagement from "../pages/Admin/PlanesManagement";
 import AirlinesManagement from "../pages/Admin/AirlinesManagement";
+import UsersManagement from "../pages/Admin/UsersManagement";
 // import CheckOut from "../pages/CheckOut";
 
 export const routes = [
@@ -43,6 +45,10 @@ export const routes = [
             {
                 path: 'user-history',
                 element: <History />
+            },
+            {
+                path: 'contact',
+                element: <Contact />
             }
         ]
     },
@@ -77,6 +83,10 @@ export const routes = [
             {
                 path: 'airlines',
                 element: <AirlinesManagement />
+            },
+            {
+                path: 'users',
+                element: <UsersManagement />
             }
         ]
     }

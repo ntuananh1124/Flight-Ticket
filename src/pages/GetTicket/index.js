@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, FormControlLabel, Grid, Paper, Radio, RadioGroup, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, CircularProgress, FormControlLabel, Grid, Modal, Paper, Radio, RadioGroup, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import Search from "../../components/Search";
 import { useEffect, useState } from "react";
@@ -7,30 +7,88 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvid
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import "./GetTicket.scss";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { getFlightPrices, getFlights } from "../../services/flightServices";
+import { getAirportList } from "../../services/airportServices";
+import { getRoutes } from "../../services/routesServies";
 
 export default function GetTicket() {
     const [airlinesList, setAirlinesList] = useState();
-    const [alignment, setAlignment] = useState('web');
-    const [num, setNum] = useState(0);
+    const [flightList, setFlightList] = useState();
+    const [selectedClass, setSelectedClass] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
 
-    const handleChange = (event, newAlignment) => {
-        setAlignment(newAlignment);
+    const handleChange = (event, newClass) => {
+  // Nếu click lại chính cái đang chọn thì bỏ chọn (null)
+        if (selectedClass === newClass) {
+            setSelectedClass(null);
+        } else {
+            setSelectedClass(newClass);
+        }
     };
 
-    const handleClick = () => {
-        setNum(a => ++a);
-        if (num % 2 !== 0) {
-            console.log('clicked number', num);
-        }
-    }
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+
+    const getFormattedClass = (cls) => cls.charAt(0).toUpperCase() + cls.slice(1);
 
     useEffect(() => {
         const fetchApi = async () => {
-            const getList = await getAirlinesList(); 
-            if (getList) {
-                console.log(getList);
-                setAirlinesList(getList);
+            const Airlines = await getAirlinesList(); 
+            const Flights = await getFlights();
+            const Airports = await getAirportList();
+            const Routes = await getRoutes();
+            const FlightPrices = await getFlightPrices();
+            if (Airlines) {
+                // console.log(Airlines);
+                setAirlinesList(Airlines);
             };
+            if (Flights) {
+                // console.log(Flights);
+                setFlightList(Flights);
+            }
+
+
+            if (Airlines && Flights && Airports && Routes && FlightPrices) {
+                function formatTime(datetime) {
+                    return new Date(datetime).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+                }
+
+                function getDuration(dep, arr) {
+                    const minutes = (new Date(arr) - new Date(dep)) / 60000;
+                    const hours = Math.floor(minutes / 60);
+                    const mins = minutes % 60;
+                return `${hours}h ${mins}m`;
+                }
+                    const result = Flights.map(flight => {
+                    const airline = Airlines.find(a => a.airline_id === flight.airline_id);
+                    const route = Routes.find(r => r.route_id === flight.route_id);
+                    const fromAirport = Airports.find(a => a.airport_id === route.from_airport);
+                    const toAirport = Airports.find(a => a.airport_id === route.to_airport);
+                    const prices = FlightPrices.filter(p => p.flight_id === flight.flight_id);
+                return {
+                    airlineName: airline?.name || "Unknown",
+                    airlineLogo: airline?.image || "",
+                    departure: {
+                        time: formatTime(flight.departure_time),
+                        date: new Date(flight.departure_time).toLocaleDateString("vi-VN"),
+                        code: fromAirport?.code || "N/A"
+                    },
+                    arrival: {
+                        time: formatTime(flight.arrival_time),
+                        date: new Date(flight.arrival_time).toLocaleDateString("vi-VN"),
+                        code: toAirport?.code || "N/A"
+                    },
+                    duration: getDuration(flight.departure_time, flight.arrival_time),
+                    prices: {
+                    Economy: (prices.find(p => p.class === "Economy")?.price || "N/A") + "$",
+                    Business: (prices.find(p => p.class === "Business")?.price || "N/A") + "$",
+                    First: (prices.find(p => p.class === "First")?.price || "N/A") + "$"
+                    }
+                };
+                });
+                // console.log(result);
+                setFlightList(result);
+            }
         };
         fetchApi();
     }, []);
@@ -93,59 +151,94 @@ export default function GetTicket() {
                         </Grid>
                         <Grid size={8}>
                             <div className="get-ticket__flight-content__list">
-                                <Paper elevation={3}>
-                                    <div className="get-ticket__flight-content__inner">
-                                        <div className="get-ticket__flight-content__inner__airline">
-                                            <div className="get-ticket__flight-content__inner__airline__img">
-                                                <img src="" alt="logo-here" />
+                                {flightList ? flightList.map((item, index) => 
+                                    <Paper elevation={3} key={index + 1}>
+                                        <div className="get-ticket__flight-content__inner">
+                                            <div className="get-ticket__flight-content__inner__airline">
+                                                <div className="get-ticket__flight-content__inner__airline__img">
+                                                    <img src={item.airlineLogo} alt="logo-here" />
+                                                </div>
+                                                <div className="get-ticket__flight-content__inner__airline__name">
+                                                    <span>{item.airlineName}</span>
+                                                </div>
                                             </div>
-                                            <div className="get-ticket__flight-content__inner__airline__name">
-                                                <span>Vietjet Air</span>
+                                            <div className="get-ticket__flight-content__inner__route">
+                                                <div className="get-ticket__flight-content__inner__route__from">
+                                                    <span>{item.departure.time}</span>
+                                                    <span style={{color: 'green', fontSize:  '13px'}}><b>{item.departure.date}</b></span>
+                                                    <span>{item.departure.code}</span>
+                                                </div>
+                                                <div className="get-ticket__flight-content__inner__route__time">
+                                                    <span>{item.duration}</span>
+                                                </div>
+                                                <div className="get-ticket__flight-content__inner__route__to">
+                                                    <span>{item.arrival.time}</span>
+                                                    <span style={{color: 'green', fontSize:  '13px'}}><b>{item.arrival.date}</b></span>
+                                                    <span>{item.arrival.code}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="get-ticket__flight-content__inner__route">
-                                            <div className="get-ticket__flight-content__inner__route__from">
-                                                <span>23:50</span>
-                                                <span>HAN</span>
-                                            </div>
-                                            <div className="get-ticket__flight-content__inner__route__time">
-                                                <span>2h 10m</span>
-                                            </div>
-                                            <div className="get-ticket__flight-content__inner__route__to">
-                                                <span>02:00</span>
-                                                <span>SGN</span>
-                                            </div>
-                                        </div>
-                                        <div className="get-ticket__flight-content__inner__prices">
-                                            <ToggleButtonGroup
-                                                color="primary"
-                                                value={alignment}
-                                                exclusive
-                                                onChange={handleChange}
-                                                aria-label="Platform"
+                                            <div className="get-ticket__flight-content__inner__prices">
+                                                <ToggleButtonGroup
+                                                    color="primary"
+                                                    value={selectedClass}
+                                                    exclusive
+                                                    onChange={handleChange}
+                                                    aria-label="class selector"
                                                 >
-                                                <ToggleButton value="economy" onClick={handleClick}>
-                                                    <div className="class">
-                                                        <span>Economy</span>
-                                                        <span className="price"><b>150</b>$</span>
-                                                    </div>
-                                                </ToggleButton>
-                                                <ToggleButton value="business" onClick={handleClick}>
-                                                    <div className="class">
-                                                        <span>Business</span>
-                                                        <span className="price"><b>300</b>$</span>
-                                                    </div>
-                                                </ToggleButton>
-                                                <ToggleButton value="first" onClick={handleClick}>
-                                                    <div className="class">
-                                                        <span>First</span>
-                                                        <span className="price"><b>450</b>$</span>
-                                                    </div>
-                                                </ToggleButton>
-                                            </ToggleButtonGroup>
+                                                    {Object.entries(item.prices).map(([className, price]) => (
+                                                        <ToggleButton
+                                                            key={className}
+                                                            value={className.toLowerCase()}
+                                                        >
+                                                            <div className="class" style={{ textAlign: "center" }}>
+                                                                <span>{className}</span>
+                                                                <span className="price">{price}</span>
+                                                            </div>
+                                                        </ToggleButton>
+                                                    ))}
+                                                </ToggleButtonGroup>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Paper>
+                                        {selectedClass && (
+                                            <Box textAlign="center" mt={2}>
+                                                <Button variant="contained" style={{marginBottom: '15px', color: 'white'}} color="primary" onClick={handleOpenModal}>
+                                                Chi tiết
+                                                </Button>
+                                            </Box>
+                                        )}
+                                        <Modal open={openModal} onClose={handleCloseModal}>
+                                            <Box
+                                            sx={{
+                                                p: 4,
+                                                width: '30vw',
+                                                bgcolor: "background.paper",
+                                                borderRadius: 2,
+                                                mx: "auto",
+                                                mt: "15%",
+                                                boxShadow: 24
+                                            }}
+                                            >
+                                            <Typography variant="h6" gutterBottom>Thông tin chuyến bay</Typography>
+                                            <Typography>Hãng: {item.airlineName}</Typography>
+                                            <Typography>
+                                                {item.departure.code} ({item.departure.time} - {item.departure.date}) → {item.arrival.code} ({item.arrival.time} - {item.arrival.date})
+                                            </Typography>
+                                            {selectedClass && (
+                                                <>
+                                                    <Typography>Hạng ghế: {getFormattedClass(selectedClass)}</Typography>
+                                                    <Typography>Giá: {item.prices[getFormattedClass(selectedClass)]}</Typography>
+                                                </>
+                                            )}
+
+                                            <Box mt={3} textAlign="right">
+                                                <Button variant="contained" color="primary" style={{color: 'white'}}>
+                                                Thêm vào giỏ hàng
+                                                </Button>
+                                            </Box>
+                                            </Box>
+                                        </Modal>
+                                    </Paper>
+                                ) : <CircularProgress />}
                             </div>
                         </Grid>
                     </Grid>

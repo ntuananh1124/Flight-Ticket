@@ -31,16 +31,94 @@
     ],
     "Airports": [
         {
-        "airport_id": 1,
-        "name": "Tân Sơn Nhất",
-        "code": "SGN",
-        "location": "Hồ Chí Minh"
+            "airport_id": 1,
+            "name": "Tân Sơn Nhất",
+            "code": "SGN",
+            "location": "Hồ Chí Minh"
         },
         {
-        "airport_id": 2,
-        "name": "Nội Bài",
-        "code": "HAN",
-        "location": "Hà Nội"
+            "airport_id": 2,
+            "name": "Nội Bài",
+            "code": "HAN",
+            "location": "Hà Nội"
+        },
+        {
+            "airport_id": 3,
+            "name": "Đà Nẵng",
+            "code": "DAD",
+            "location": "Đà Nẵng"
+        },
+        {
+            "airport_id": 4,
+            "name": "Cam Ranh",
+            "code": "CXR",
+            "location": "Khánh Hòa"
+        },
+        {
+            "airport_id": 6,
+            "name": "Phú Quốc",
+            "code": "PQC",
+            "location": "Kiên Giang"
+        },
+        {
+            "airport_id": 1001,
+            "name": "Changi",
+            "code": "SIN",
+            "location": "Singapore"
+        },
+        {
+            "airport_id": 1002,
+            "name": "Suvarnabhumi",
+            "code": "BKK",
+            "location": "Bangkok, Thái Lan"
+        },
+        {
+            "airport_id": 1003,
+            "name": "Incheon",
+            "code": "ICN",
+            "location": "Seoul, Hàn Quốc"
+        },
+        {
+            "airport_id": 1004,
+            "name": "Narita",
+            "code": "NRT",
+            "location": "Tokyo, Nhật Bản"
+        },
+        {
+            "airport_id": 1005,
+            "name": "Los Angeles International",
+            "code": "LAX",
+            "location": "Los Angeles, Hoa Kỳ"
+        },
+        {
+            "airport_id": 1006,
+            "name": "Heathrow",
+            "code": "LHR",
+            "location": "London, Vương quốc Anh"
+        },
+        {
+            "airport_id": 1007,
+            "name": "Dubai International",
+            "code": "DXB",
+            "location": "Dubai, UAE"
+        },
+        {
+            "airport_id": 1008,
+            "name": "Frankfurt",
+            "code": "FRA",
+            "location": "Frankfurt, Đức"
+        },
+        {
+            "airport_id": 1009,
+            "name": "Sydney Kingsford Smith",
+            "code": "SYD",
+            "location": "Sydney, Úc"
+        },
+        {
+            "airport_id": 1010,
+            "name": "John F. Kennedy International",
+            "code": "JFK",
+            "location": "New York, Hoa Kỳ"
         }
     ],
     "Airplanes": [
@@ -95,7 +173,7 @@
         "airplane_id": 1,
         "route_id": 1,
         "departure_time": "2025-06-01T08:00:00",
-        "arrival_time": "2025-06-01T10:10:00",
+        "arrival_time": "2025-06-02T10:10:00",
         "status": "On Time",
         "airline_id": 1
         }
@@ -169,5 +247,9 @@
         "price": 1500000,
         "ticket_type": "Economy"
         }
+    ],
+    "FlightSeats": [
+        {"flight_id": 1, "seat_id": 1, "is_booked": false},
+        {"flight_id": 1, "seat_id": 2, "is_booked": true}
     ]
 }

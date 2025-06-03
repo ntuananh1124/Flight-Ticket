@@ -45,6 +45,9 @@ export default function Sidebar() {
                     <NavLink style={{width: '100%'}} to='bookings'>Bookings</NavLink>
                 </ListItem>
                 <ListItem button>
+                    <NavLink style={{width: '100%'}} to='users'>Quản lí người dùng</NavLink>
+                </ListItem>
+                <ListItem button>
                     <NavLink style={{width: '100%'}} to='planes'>Máy bay</NavLink>
                 </ListItem>
                 <ListItem button>

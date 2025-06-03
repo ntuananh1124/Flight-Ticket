@@ -8,6 +8,10 @@ import Icon2 from '../../image/icon/map-people.svg';
 import Icon3 from '../../image/icon/mobile-payment.svg';
 import Icon4 from '../../image/icon/notes-edit-search.svg';
 import Search from "../../components/Search/index.js";
+import Europe from '../../image/popular/europe.jpg';
+import Africa from '../../image/popular/africa.jpg';
+import Asian from '../../image/popular/asian.jpg';
+import SouthestAsia from '../../image/popular/southest_asia.jpg';
 
 export default function Home() {
     return (
@@ -30,7 +34,54 @@ export default function Home() {
                         <p>Hãy bắt đầu hành trình khám phá những vùng đất mới, nơi mỗi bước chân là một cuộc phiêu lưu kỳ thú và mỗi điểm đến đều ẩn chứa vẻ đẹp văn hóa đặc sắc. Cùng chúng tôi trải nghiệm thế giới theo cách độc đáo và đáng nhớ nhất.</p>
                     </div> 
                     <div className="section-2__main__content">
-                            
+                        <div className="popular-desti">
+                            <Grid container spacing={2}>
+                                <Grid size={3}>
+                                    <div className="content-slide">
+                                        <div className="content-slide__img">
+                                            <img src={Europe} alt="img"/>
+                                        </div>
+                                        <div className="content-slide__text">
+                                            <h4>Châu Âu</h4>
+                                            <p>Mỗi hành trình là một câu chuyện riêng – chúng tôi sẽ giúp bạn viết nên những kỷ niệm khó quên qua từng chuyến đi.</p>
+                                        </div>
+                                    </div>
+                                </Grid>
+                                <Grid size={3}>
+                                    <div className="content-slide">
+                                        <div className="content-slide__img">
+                                            <img src={Africa} alt="img"/>
+                                        </div>
+                                        <div className="content-slide__text">
+                                            <h4>Châu Phi</h4>
+                                            <p>Mỗi hành trình là một câu chuyện riêng – chúng tôi sẽ giúp bạn viết nên những kỷ niệm khó quên qua từng chuyến đi.</p>
+                                        </div>
+                                    </div>
+                                </Grid>
+                                <Grid size={3}>
+                                    <div className="content-slide">
+                                        <div className="content-slide__img">
+                                            <img src={Asian} alt="img"/>
+                                        </div>
+                                        <div className="content-slide__text">
+                                            <h4>Châu Á</h4>
+                                            <p>Mỗi hành trình là một câu chuyện riêng – chúng tôi sẽ giúp bạn viết nên những kỷ niệm khó quên qua từng chuyến đi.</p>
+                                        </div>
+                                    </div>
+                                </Grid>
+                                <Grid size={3}>
+                                    <div className="content-slide">
+                                        <div className="content-slide__img">
+                                            <img src={SouthestAsia} alt="img"/>
+                                        </div>
+                                        <div className="content-slide__text">
+                                            <h4>Đông Nam Á</h4>
+                                            <p>Mỗi hành trình là một câu chuyện riêng – chúng tôi sẽ giúp bạn viết nên những kỷ niệm khó quên qua từng chuyến đi.</p>
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </div>
                     </div>       
                 </div>
             </div>

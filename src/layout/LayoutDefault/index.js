@@ -100,7 +100,7 @@ export default function LayoutDefault() {
                                     <NavLink to='/about-us'>Về chúng tôi</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to='/'>Liên hệ</NavLink>
+                                    <NavLink to='/contact'>Liên hệ</NavLink>
                                 </li>
                             </ul>
                         </nav>

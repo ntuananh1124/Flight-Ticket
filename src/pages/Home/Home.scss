@@ -148,3 +148,46 @@
         width: 80%;
     }
 }
+
+.popular-desti {
+    // display: flex;
+    // justify-content: center;
+    width: 100%;
+    height: auto;
+    & .content-slide {
+        width: 100%;
+        border-radius: 7px;
+        overflow: hidden;
+        position: relative;
+
+        &:hover .content-slide__img{
+            transform: scale(1.4);
+        }
+        &__img {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            transition: .6s ease-in-out;
+            &::before {
+                content: "";
+                position: absolute;
+                display: block;
+                // opacity: .5;
+                // z-index: -1;
+                background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.815));
+                inset: 0;
+            }
+            & img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        &__text {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+        }
+    }
+}
