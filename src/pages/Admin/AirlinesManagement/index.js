@@ -254,7 +254,7 @@ export default function AirlinesManagement() {
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box sx={modalStyle}>
           <Typography variant="h6" mb={2}>Thêm hãng hàng không</Typography>
-          {['airline_id', 'name', 'image', 'description', 'id'].map((field) => (
+          {['airline_id', 'Tên hãng hàng không', 'Logo', 'Mô tả'].map((field) => (
             <TextField
               key={field}
               name={field}

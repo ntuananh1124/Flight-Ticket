@@ -44,7 +44,7 @@ function getComparator(order, orderBy) {
 
 const modalStyle = {
   position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-  width: 400, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 24, p: 4,
+  width: '50vw', bgcolor: 'background.paper', borderRadius: 2, boxShadow: 24, p: 4,
 };
 
 export default function UserTable() {
@@ -220,7 +220,7 @@ export default function UserTable() {
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box sx={modalStyle}>
           <Typography variant="h6" mb={2}>Thêm người dùng</Typography>
-          {['user_id', 'name', 'email', 'password', 'phone_number', 'created_at'].map((field) => (
+          {['name', 'email', 'password', 'phone_number'].map((field) => (
             <TextField
               key={field}
               name={field}

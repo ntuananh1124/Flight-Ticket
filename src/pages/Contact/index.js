@@ -12,7 +12,7 @@ export default function Contact() {
 
                     <div className="company-info">
                     <h2>Thông tin công ty</h2>
-                    <h3>THE ONE DIGI CORP</h3>
+                    <h3>THE FLIGHT TICKET</h3>
                     </div>
 
                     <div className="contact-grid">
@@ -23,8 +23,8 @@ export default function Contact() {
                         <h4>Địa chỉ</h4>
                         <p>Bạn có thể đến công ty qua địa chỉ:</p>
                         <p>
-                        Số 40 - 42, Đường Thiên Phước, Phường 9,<br />
-                        Quận Tân Bình, Thành phố Hồ Chí Minh, Việt Nam
+                        Số abc, Đường abc, Phường abc,<br />
+                        Quận ABC, Thành phố Hồ Chí Minh, Việt Nam
                         </p>
                     </div>
 
@@ -35,9 +35,9 @@ export default function Contact() {
                         <h4>Đường dây nóng</h4>
                         <p>Hãy gọi cho chúng tôi:</p>
                         <p>🇻🇳 1900 8248</p>
-                        <p>🇻🇳 (+84) 987 309 313</p>
-                        <p>🇻🇳 (+84) 979 312 913</p>
-                        <p>🇻🇳 (+84) 28 6685 1317</p>
+                        <p>🇻🇳 (+84) 833 748 190</p>
+                        <p>🇻🇳 (+84) 079 312 913</p>
+                        <p>🇻🇳 (+84) 27 6685 1117</p>
                     </div>
 
                     <div className="contact-card">
@@ -46,7 +46,7 @@ export default function Contact() {
                         </div>
                         <h4>Email</h4>
                         <p>Gửi email cho chúng tôi tại:</p>
-                        <p>booking@flycorp.vn</p>
+                        <p>nghiemtuananh2004@gmail.com</p>
                     </div>
                     </div>
 

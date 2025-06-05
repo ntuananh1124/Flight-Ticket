@@ -271,15 +271,13 @@ export default function Purchase() {
                                             <TextField defaultValue={'0833748190'} slotProps={{input: {readOnly: true,}}} fullWidth required id="outlined-basic" label="Số điện thoại" variant="standard"/>
                                         </Grid>
                                         <Grid size={4}>
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                <DatePicker label="Ngày tháng năm sinh" />
-                                            </LocalizationProvider>
+                                            <TextField defaultValue={'15/10/2004'} slotProps={{input: {readOnly: true,}}} fullWidth required id="outlined-basic" label="Ngày tháng năm sinh" variant="standard"/>
                                         </Grid>
                                         <Grid size={4}>
-                                            <CountrySelect />
+                                            <TextField fullWidth defaultValue={'Vietnam'} slotProps={{input: {readOnly: true,}}} required id="outlined-basic" label="Quốc tịch" variant="standard" />
                                         </Grid>
                                         <Grid size={4}>
-                                            <TextField fullWidth defaultValue={'0833748190'} slotProps={{input: {readOnly: true,}}} required id="outlined-basic" label="Số CCCD/Hộ chiếu" variant="standard" />
+                                            <TextField fullWidth defaultValue={'001203479565'} slotProps={{input: {readOnly: true,}}} required id="outlined-basic" label="Số CCCD/Hộ chiếu" variant="standard" />
                                         </Grid>
                                         <Grid container spacing={2}>
                                             <h2 style={{marginBottom: '20px'}}>THANH TOÁN</h2>
