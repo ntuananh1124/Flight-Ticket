@@ -10,12 +10,19 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getFlightPrices, getFlights } from "../../services/flightServices";
 import { getAirportList } from "../../services/airportServices";
 import { getRoutes } from "../../services/routesServies";
+import { useSearchParams } from "react-router";
+import axios from 'axios';
 
 export default function GetTicket() {
     const [airlinesList, setAirlinesList] = useState();
     const [flightList, setFlightList] = useState();
     const [selectedClass, setSelectedClass] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [searchParams] = useSearchParams();
+
+    const from = searchParams.get('from'); // ví dụ: SGN
+    const to = searchParams.get('to');     // ví dụ: HAN
+    const start = searchParams.get('start'); // ví dụ: 2025-06-20
 
     const handleChange = (event, newClass) => {
   // Nếu click lại chính cái đang chọn thì bỏ chọn (null)
@@ -35,6 +42,23 @@ export default function GetTicket() {
         const fetchApi = async () => {
             const Airlines = await getAirlinesList(); 
             const Flights = await getFlights();
+            async function fetchFlight() {
+                try {
+                    const res = await axios.get(`http://localhost:5000/api/flights`);
+                    if (res && res.data) {
+                        // debugger
+                        setFlightList(res.data);
+                        console.log(flightList);
+                    };
+                } catch (error) {
+                    console.log('error!');
+                }
+                finally {
+                    console.log('loading done!');
+                }
+            };
+            // fetchFlight();
+
             const Airports = await getAirportList();
             const Routes = await getRoutes();
             const FlightPrices = await getFlightPrices();
@@ -42,12 +66,8 @@ export default function GetTicket() {
                 // console.log(Airlines);
                 setAirlinesList(Airlines);
             };
-            if (Flights) {
-                // console.log(Flights);
-                setFlightList(Flights);
-            }
 
-
+            // debugger
             if (Airlines && Flights && Airports && Routes && FlightPrices) {
                 function formatTime(datetime) {
                     return new Date(datetime).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
@@ -91,7 +111,7 @@ export default function GetTicket() {
             }
         };
         fetchApi();
-    }, []);
+    }, [flightList]);
 
     return (
         <div className="get-ticket">
@@ -151,7 +171,7 @@ export default function GetTicket() {
                         </Grid>
                         <Grid size={8}>
                             <div className="get-ticket__flight-content__list">
-                                {flightList ? flightList.map((item, index) => 
+                                {flightList !== undefined ? flightList.map((item, index) => 
                                     <Paper elevation={3} key={index + 1}>
                                         <div className="get-ticket__flight-content__inner">
                                             <div className="get-ticket__flight-content__inner__airline">

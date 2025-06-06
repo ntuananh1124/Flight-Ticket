@@ -15,6 +15,22 @@ try {
 }
 });
 
+// Theo id
+router.get('/:id', async (req, res) => {
+const airportId = parseInt(req.params.id);
+try {
+    await sql.connect(dbConfig);
+    const result = await sql.query(`SELECT * FROM Airports WHERE airport_id = ${airportId}`);
+    if (result.recordset.length === 0) {
+    return res.status(404).json({ message: 'Không tìm thấy sân bay' });
+    }
+    res.json(result.recordset[0]);
+} catch (err) {
+    console.error('Lỗi khi lấy sân bay theo ID:', err);
+    res.status(500).send('Lỗi máy chủ');
+}
+});
+
 // Thêm sân bay mới
 router.post('/', async (req, res) => {
 const { name, code, location } = req.body;

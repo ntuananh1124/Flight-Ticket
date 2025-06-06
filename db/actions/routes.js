@@ -17,9 +17,10 @@ res.status(500).send('Lỗi máy chủ');
 
 // ➕ POST: Thêm tuyến bay mới
 router.post('/', async (req, res) => {
-const { from_airport, to_airport, distance_km } = req.body;
-try {
-await sql.connect(dbConfig);
+    const { from_airport, to_airport, distance_km } = req.body;
+
+    try {
+    await sql.connect(dbConfig);
 await sql.query(`INSERT INTO Routes (from_airport, to_airport, distance_km) VALUES (${from_airport}, ${to_airport}, ${distance_km})`) ;
 res.status(201).send('Thêm tuyến bay thành công');
 } catch (err) {

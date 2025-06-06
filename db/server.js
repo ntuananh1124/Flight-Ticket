@@ -19,6 +19,7 @@ const bookingRoutes = require('./actions/bookings');
 const paymentRoutes = require('./actions/payments');
 const passengerRoutes = require('./actions/passengers');
 const flightSeatRoutes = require('./actions/flightSeats');
+const ticketRoutes = require('./actions/tickets');
 
 // API chuyến bay (ví dụ)
 // const { sql, dbConfig } = require('./dbConfig');
@@ -47,6 +48,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/passengers', passengerRoutes);
 app.use('/api/flight-seats', flightSeatRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 
 // Khởi động
