@@ -15,32 +15,53 @@ res.status(500).send('Lỗi máy chủ');
 }
 });
 
-// ➕ POST: Thêm máy bay
+// POST thêm máy bay
 router.post('/', async (req, res) => {
-const { model, capacity } = req.body;
-try {
-await sql.connect(dbConfig);
-await sql.query(`INSERT INTO Airplanes (model, capacity) VALUES (${model}, ${capacity})`) ;
-res.status(201).send('Thêm máy bay thành công');
-} catch (err) {
-console.error('Lỗi khi thêm máy bay:', err);
-res.status(500).send('Lỗi máy chủ');
-}
+    const { model, capacity } = req.body;
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('model', sql.NVarChar, model);
+        request.input('capacity', sql.Int, capacity);
+
+        await request.query(`
+            INSERT INTO Airplanes (model, capacity)
+            VALUES (@model, @capacity)
+        `);
+
+        res.status(201).send('Thêm máy bay thành công');
+    } catch (err) {
+        console.error('Lỗi khi thêm máy bay:', err);
+        res.status(500).send('Lỗi máy chủ');
+    }
 });
 
-// 🔄 PUT: Cập nhật máy bay
+// PUT cập nhật máy bay
 router.put('/:id', async (req, res) => {
-const { id } = req.params;
-const { model, capacity } = req.body;
-try {
-await sql.connect(dbConfig);
-await sql.query(`UPDATE Airplanes SET model = ${model}, capacity = ${capacity} WHERE airplane_id = ${id}`) ;
-res.send('Cập nhật máy bay thành công');
-} catch (err) {
-console.error('Lỗi khi cập nhật máy bay:', err);
-res.status(500).send('Lỗi máy chủ');
-}
+    const { id } = req.params;
+    const { model, capacity } = req.body;
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('model', sql.NVarChar, model);
+        request.input('capacity', sql.Int, capacity);
+        request.input('id', sql.Int, id);
+
+        await request.query(`
+            UPDATE Airplanes
+            SET model = @model, capacity = @capacity
+            WHERE airplane_id = @id
+        `);
+
+        res.send('Cập nhật máy bay thành công');
+    } catch (err) {
+        console.error('Lỗi khi cập nhật máy bay:', err);
+        res.status(500).send('Lỗi máy chủ');
+    }
 });
+
 
 // ❌ DELETE: Xoá máy bay
 router.delete('/:id', async (req, res) => {
