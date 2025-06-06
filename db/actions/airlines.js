@@ -17,29 +17,55 @@ res.status(500).send('Lỗi máy chủ');
 
 // ➕ POST: Thêm hãng hàng không
 router.post('/', async (req, res) => {
-const { name, image, description } = req.body;
-try {
-await sql.connect(dbConfig);
-await sql.query(`INSERT INTO Airlines (name, image, description) VALUES (${name}, ${image}, ${description})`) ;
-res.status(201).send('Thêm hãng hàng không thành công');
-} catch (err) {
-console.error('Lỗi khi thêm airlines:', err);
-res.status(500).send('Lỗi máy chủ');
-}
+    const { name, image, description } = req.body;
+
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('name', sql.NVarChar, name);
+        request.input('image', sql.NVarChar, image);
+        request.input('description', sql.NVarChar, description);
+
+        await request.query(`
+        INSERT INTO Airlines (name, image, description)
+        VALUES (@name, @image, @description)
+        `);
+
+        res.status(201).send('Thêm hãng hàng không thành công');
+    } catch (err) {
+        console.error('Lỗi khi thêm hãng:', err);
+        res.status(500).send('Lỗi máy chủ');
+    }
 });
 
 // 🔄 PUT: Cập nhật hãng hàng không
 router.put('/:id', async (req, res) => {
-const { id } = req.params;
-const { name, image, description } = req.body;
-try {
-await sql.connect(dbConfig);
-await sql.query(`UPDATE Airlines SET name = ${name}, image = ${image}, description = ${description} WHERE airline_id = ${id}`) ;
-res.send('Cập nhật hãng hàng không thành công');
-} catch (err) {
-console.error('Lỗi khi cập nhật airlines:', err);
-res.status(500).send('Lỗi máy chủ');
-}
+    const { id } = req.params;
+    const { name, image, description } = req.body;
+
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('id', sql.Int, id);
+        request.input('name', sql.NVarChar, name);
+        request.input('image', sql.NVarChar, image);
+        request.input('description', sql.NVarChar, description);
+
+        await request.query(`
+        UPDATE Airlines
+        SET name = @name,
+            image = @image,
+            description = @description
+        WHERE airline_id = @id
+        `);
+
+        res.send('Cập nhật hãng hàng không thành công');
+    } catch (err) {
+        console.error('Lỗi khi cập nhật hãng:', err);
+        res.status(500).send('Lỗi máy chủ');
+    }
 });
 
 // ❌ DELETE: Xoá hãng hàng không

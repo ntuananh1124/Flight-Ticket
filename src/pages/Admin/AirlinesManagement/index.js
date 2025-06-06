@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination,
   TableRow, Checkbox, TableSortLabel, TextField, IconButton, Button, Box, Modal,
@@ -8,43 +9,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
 
-const initialData = [
-  {
-    airline_id: 1,
-    name: "Vietnam Airlines",
-    image: "https://i.postimg.cc/13dQm0PL/vietnam-airlines.png",
-    description: "Vietnam Airlines là hãng hàng không quốc gia, cung cấp dịch vụ bay nội địa và quốc tế chất lượng cao.",
-    id: "6c87"
-  },
-  {
-    airline_id: 2,
-    name: "Qatar Airways",
-    image: "https://i.postimg.cc/R0nzN3Zq/qatar-airways.jpg",
-    description: "Qatar Airways là hãng hàng không quốc tế nổi tiếng với dịch vụ cao cấp, trụ sở tại Doha, Qatar.",
-    id: "553e"
-  },
-  {
-    airline_id: 3,
-    name: "Bamboo Airways",
-    image: "https://i.postimg.cc/L6HRN6N0/bamboo-airways.jpg",
-    description: "Bamboo Airways là hãng hàng không tư nhân của Việt Nam, nổi bật với dịch vụ thân thiện và chuyến bay đúng giờ.",
-    id: "0962"
-  },
-  {
-    airline_id: 4,
-    name: "Vietjet Air",
-    image: "https://i.postimg.cc/7638np7k/vietjet-airlines.jpg",
-    description: "Vietjet Air là hãng hàng không giá rẻ hàng đầu Việt Nam với mạng lưới bay rộng khắp.",
-    id: "37f6"
-  }
-];
-
 const headCells = [
   { id: 'airline_id', label: 'ID' },
   { id: 'name', label: 'Tên' },
   { id: 'image', label: 'Logo' },
   { id: 'description', label: 'Mô tả' },
-  { id: 'id', label: 'Mã' },
   { id: 'actions', label: 'Hành động' },
 ];
 
@@ -66,7 +35,7 @@ const modalStyle = {
 };
 
 export default function AirlinesManagement() {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('airline_id');
@@ -77,8 +46,21 @@ export default function AirlinesManagement() {
   const [editedRow, setEditedRow] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [newAirline, setNewAirline] = useState({
-    airline_id: '', name: '', image: '', description: '', id: ''
+    name: '', image: '', description: ''
   });
+
+  useEffect(() => {
+    fetchAirlines();
+  }, []);
+
+  const fetchAirlines = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/airlines');
+      setData(res.data);
+    } catch (error) {
+      console.error('Lỗi khi fetch airlines:', error);
+    }
+  };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) setSelected(data.map((n) => n.airline_id));
@@ -111,12 +93,16 @@ export default function AirlinesManagement() {
     setEditedRow({ ...row });
   };
 
-  const handleSave = () => {
-    const newData = data.map((item) =>
-      item.airline_id === editingId ? editedRow : item
-    );
-    setData(newData);
-    setEditingId(null);
+  const handleSave = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/airlines/${editingId}`, editedRow);
+      await fetchAirlines();
+      alert('Cập nhật thành công!');
+      setEditingId(null);
+    } catch (error) {
+      alert('Cập nhật không thành công!');
+      console.error('Lỗi khi cập nhật airline:', error);
+    }
   };
 
   const handleInputChange = (e, key) => {
@@ -128,11 +114,24 @@ export default function AirlinesManagement() {
     setNewAirline({ ...newAirline, [name]: value });
   };
 
-  const handleAddAirline = () => {
-    const parsed = { ...newAirline, airline_id: parseInt(newAirline.airline_id) };
-    setData([...data, parsed]);
-    setOpenModal(false);
-    setNewAirline({ airline_id: '', name: '', image: '', description: '', id: '' });
+  const handleAddAirline = async () => {
+    const { name, image, description } = newAirline;
+    if (!name || !image || !description) {
+      alert('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:5000/api/airlines', newAirline);
+      await fetchAirlines();
+
+      alert('Thêm mới thành công !');
+      setOpenModal(false);
+      setNewAirline({ name: '', image: '', description: '' });
+    } catch (error) {
+      alert('Thêm không thành công !');
+      console.error('Lỗi khi thêm airline:', error);
+    }
   };
 
   const isSelected = (id) => selected.includes(id);
@@ -213,7 +212,7 @@ export default function AirlinesManagement() {
                         size="small"
                       />
                     ) : (
-                      <Avatar src={row.image} alt={row.name} variant="rounded" />
+                      <Avatar src={`${row.image}`} alt={row.name} variant="rounded" />
                     )}
                   </TableCell>
                   <TableCell>
@@ -226,7 +225,6 @@ export default function AirlinesManagement() {
                       />
                     ) : row.description}
                   </TableCell>
-                  <TableCell>{row.id}</TableCell>
                   <TableCell>
                     {isEditing ? (
                       <IconButton onClick={handleSave}><SaveIcon /></IconButton>
@@ -254,18 +252,33 @@ export default function AirlinesManagement() {
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box sx={modalStyle}>
           <Typography variant="h6" mb={2}>Thêm hãng hàng không</Typography>
-          {['airline_id', 'Tên hãng hàng không', 'Logo', 'Mô tả'].map((field) => (
-            <TextField
-              key={field}
-              name={field}
-              label={field}
-              fullWidth
-              margin="normal"
-              value={newAirline[field]}
-              onChange={handleModalChange}
-            />
-          ))}
-          <Button fullWidth variant="contained" onClick={handleAddAirline}>
+          <TextField
+            name="name"
+            label="Tên hãng hàng không"
+            fullWidth
+            margin="normal"
+            value={newAirline.name}
+            onChange={handleModalChange}
+          />
+          <TextField
+            name="image"
+            label="Link ảnh logo (image)"
+            fullWidth
+            margin="normal"
+            value={newAirline.image}
+            onChange={handleModalChange}
+          />
+          <TextField
+            name="description"
+            label="Mô tả"
+            fullWidth
+            margin="normal"
+            multiline
+            rows={3}
+            value={newAirline.description}
+            onChange={handleModalChange}
+          />
+          <Button fullWidth variant="contained" onClick={handleAddAirline} sx={{ mt: 2 }}>
             Lưu
           </Button>
         </Box>

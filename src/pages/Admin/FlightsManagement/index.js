@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FlightIcon from '@mui/icons-material/Flight';
 import { getAirportByIdAxios, getAirportListAxios } from '../../../services/airportServices';
 import SaveIcon from '@mui/icons-material/Save';
@@ -176,39 +177,54 @@ export default function AirplaneTable() {
         )
     );
 
-    const sortedData = filteredData.sort((a, b) => {
-        if (b[orderBy] < a[orderBy]) return -1;
-        if (b[orderBy] > a[orderBy]) return 1;
-        return 0;
-    });
+    function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) return -1;
+    if (b[orderBy] > a[orderBy]) return 1;
+    return 0;
+}
+
+    function getComparator(order, orderBy) {
+        return order === 'desc'
+            ? (a, b) => descendingComparator(a, b, orderBy)
+            : (a, b) => -descendingComparator(a, b, orderBy);
+    }
+
+    const sortedData = filteredData.sort(getComparator(order, orderBy));
+
     const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const handleCreateRoute = async () => {
-        // debugger;
-        if (!departure || !destination || !distanceKm) {
-            alert("Vui lòng điền đầy đủ thông tin.");
-            return; 
-        }
+    if (!departure?.airport_id || !destination?.airport_id || !distanceKm) {
+        alert("Vui lòng điền đầy đủ thông tin.");
+        return;
+    }
 
-        try {
-            // eslint-disable-next-line
-            const res = await axios.post('http://localhost:5000/api/routes', {
-                from_airport: departure.airport_id,
-                to_airport: destination.airport_id,
-                distance_km: parseFloat(distanceKm)
-            });
+    const existingRoute = routeList.find((route) => 
+        Number(route.from_airport) === Number(departure.airport_id) &&
+        Number(route.to_airport) === Number(destination.airport_id)
+    );
 
-            alert('Tạo tuyến bay thành công');
-            setOpenRouteModal(false); // Đóng modal nếu có
-            // TODO: Reset form
-            setDeparture(null);
-            setDestination(null);
-            setDistanceKm('');
-        } catch (err) {
-            console.error('Lỗi khi tạo tuyến bay:', err);
-            const msg = err.response?.data || 'Có lỗi xảy ra, vui lòng thử lại';
-            alert(msg);
-        }
+    if (existingRoute) {
+        alert('Tuyến bay này đã có sẵn!');
+        return;
+    }
+
+    try {
+        await axios.post('http://localhost:5000/api/routes', {
+            from_airport: departure.airport_id,
+            to_airport: destination.airport_id,
+            distance_km: parseFloat(distanceKm)
+        });
+
+        alert('Tạo tuyến bay thành công');
+        setOpenRouteModal(false);
+        setDeparture(null);
+        setDestination(null);
+        setDistanceKm('');
+    } catch (err) {
+        console.error('Lỗi khi tạo tuyến bay:', err);
+        alert(err.response?.data || 'Có lỗi xảy ra, vui lòng thử lại');
+    }
     };
 
     const handleAddFlight = async () => {
@@ -365,6 +381,26 @@ export default function AirplaneTable() {
         );
     }, [airportList, departure]);
     // console.log('textfield 2',filteredDestinationOptions);
+    // eslint-disable-next-line
+    const [deletingId, setDeletingId] = useState(null);
+
+    const handleDeleteFlight = async (id) => {
+        const confirmDelete = window.confirm('Bạn có chắc chắn muốn xoá chuyến bay này?');
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(`http://localhost:5000/api/flights/${id}`);
+            alert('Xoá chuyến bay thành công');
+
+            // Reload flights list
+            const flightsAxios = await getFlightsAxios();
+            const enrichedFlights = enrichFlights(flightsAxios, airplanesList, airlinesList, routeList, airportList);
+            setData(enrichedFlights);
+        } catch (error) {
+            console.error('Lỗi khi xoá chuyến bay:', error);
+            alert(error.response?.data || 'Có lỗi xảy ra khi xoá');
+        }
+    };
 
     return (
         <Paper>
@@ -447,9 +483,14 @@ export default function AirplaneTable() {
                                 <TableCell>{row.airline_name}</TableCell>
                                 <TableCell>
                                     {isEditing ? (
-                                    <IconButton onClick={handleSave}><SaveIcon /></IconButton>
+                                        <IconButton onClick={handleSave}><SaveIcon /></IconButton>
                                     ) : (
-                                    <IconButton onClick={() => handleEdit(row.flight_id)}><EditIcon /></IconButton>
+                                        <>
+                                            <IconButton onClick={() => handleEdit(row.flight_id)}><EditIcon /></IconButton>
+                                            <IconButton onClick={() => handleDeleteFlight(row.flight_id)} sx={{ ml: 1 }}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </>
                                     )}
                                 </TableCell>
                             </TableRow>
@@ -652,7 +693,7 @@ export default function AirplaneTable() {
                                 getOptionLabel={(option) => `${option.name} (${option.code}) - ${option.location}`}
                                 sx={{ width: '100%' }}
                                 onChange={(e, newValue) => {
-                                    console.log('newValue', newValue);
+                                    // console.log('newValue', newValue);
                                     setDeparture(newValue);
                                 }}
                                 renderInput={(params) => <TextField {...params} label="Điểm khởi hành" />}
