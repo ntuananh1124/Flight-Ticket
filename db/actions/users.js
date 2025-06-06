@@ -16,10 +16,20 @@ try {
 
 // CREATE new user
 router.post('/', async (req, res) => {
-const { name, email, password, phone_number } = req.body;
+    const { name, email, password, phone_number } = req.body;
     try {
         await sql.connect(dbConfig);
-        await sql.query(`INSERT INTO Users (name, email, password, phone_number) VALUES (${name}, ${email}, ${password}, ${phone_number})`) ;
+        const request = new sql.Request();
+        request.input('name', sql.NVarChar, name);
+        request.input('email', sql.VarChar, email);
+        request.input('password', sql.VarChar, password);
+        request.input('phone_number', sql.VarChar, phone_number);
+
+        await request.query(`
+            INSERT INTO Users (name, email, password, phone_number) 
+            VALUES (@name, @email, @password, @phone_number)
+        `);
+
         res.status(201).send('Thêm người dùng thành công');
     } catch (err) {
         console.error(err);
@@ -33,7 +43,14 @@ router.put('/:id', async (req, res) => {
     const { name, email, password, phone_number } = req.body;
     try {
         await sql.connect(dbConfig);
-        await sql.query(`UPDATE Users SET name = ${name}, email = ${email}, password = ${password}, phone_number = ${phone_number} WHERE user_id = ${id}`);
+        await sql.query(`
+            UPDATE Users
+            SET name = '${name}', 
+                email = '${email}', 
+                password = '${password}', 
+                phone_number = '${phone_number}'
+            WHERE user_id = ${id}
+        `);
         res.send('Cập nhật người dùng thành công');
     } catch (err) {
         console.error(err);

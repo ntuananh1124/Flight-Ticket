@@ -1,24 +1,15 @@
 import './UsersManagement.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination,
   TableRow, Checkbox, TableSortLabel, TextField, IconButton, Button, Box, Modal,
-  Typography
+  Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
-
-const initialData = [
-  { user_id: 1, name: "Nguy?n Văn A", email: "vana@gmail.com", password: "123456", phone_number: "0909123456", created_at: "2025-05-21T16:19:26.930Z" },
-  { user_id: 2, name: "Tr?n Th? B", email: "thib@gmail.com", password: "abcdef", phone_number: "0911222333", created_at: "2025-05-21T16:19:26.930Z" },
-  { user_id: 3, name: "Mai Duy Sơn", email: "maiduyson2k4@gmail.com", password: "sonson123", phone_number: "0909123455", created_at: "2025-06-02T15:44:11.500Z" },
-  { user_id: 4, name: "Tr?n Nam Khánh", email: "trankhanh2k4@gmail.com", password: "khanhsky123", phone_number: "0909123450", created_at: "2025-06-02T15:44:11.500Z" },
-  { user_id: 5, name: "Tô Văn Nam", email: "tonam2k4@gmail.com", password: "tonam2004", phone_number: "0959123450", created_at: "2025-06-02T15:44:11.500Z" },
-  { user_id: 6, name: "Nguy?n Do?n Nam", email: "namnam2k4@gmail.com", password: "nam2004", phone_number: "0959143450", created_at: "2025-06-02T15:44:11.500Z" },
-  { user_id: 7, name: "Nguy?n Văn Nam", email: "vannam2004@gmail.com", password: "nam2004", phone_number: "0359143750", created_at: "2025-06-02T15:44:11.500Z" },
-  { user_id: 8, name: "Dương Hoài Nam", email: "duonghoainam24@gmail.com", password: "abcdef", phone_number: "0911222345", created_at: "2025-06-02T15:44:11.500Z" }
-];
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const headCells = [
   { id: 'user_id', label: 'ID' },
@@ -47,8 +38,8 @@ const modalStyle = {
   width: '50vw', bgcolor: 'background.paper', borderRadius: 2, boxShadow: 24, p: 4,
 };
 
-export default function UserTable() {
-  const [data, setData] = useState(initialData);
+export default function UsersManagement() {
+  const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('user_id');
@@ -59,8 +50,22 @@ export default function UserTable() {
   const [editedRow, setEditedRow] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [newUser, setNewUser] = useState({
-    user_id: '', name: '', email: '', password: '', phone_number: '', created_at: ''
+    name: '', email: '', password: '', phone_number: ''
   });
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/users');
+      setData(res.data);
+    } catch (error) {
+      console.error('Lỗi khi fetch users:', error);
+    }
+  };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -85,6 +90,7 @@ export default function UserTable() {
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -96,12 +102,57 @@ export default function UserTable() {
     setEditedRow({ ...row });
   };
 
-  const handleSave = () => {
-    const newData = data.map((item) =>
-      item.user_id === editingId ? editedRow : item
-    );
-    setData(newData);
+  const handleSave = async () => {
+  const { name, email, password, phone_number } = editedRow;
+
+  if (!name || !email || !password || !phone_number) {
+    alert('Vui lòng nhập đầy đủ thông tin');
+    return;
+  }
+
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    alert('Email không hợp lệ');
+    return;
+  }
+
+  const emailExists = data.some((user) =>
+    user.email === email && user.user_id !== editingId
+  );
+  if (emailExists) {
+    alert('Email này đã được sử dụng');
+    return;
+  }
+
+  const phoneRegex = /^0\d{9}$/;
+  if (!phoneRegex.test(phone_number)) {
+    alert('Số điện thoại không hợp lệ (phải gồm 10 số và bắt đầu bằng số 0)');
+    return;
+  }
+
+  try {
+    await axios.put(`http://localhost:5000/api/users/${editingId}`, editedRow);
+    await fetchUsers();
     setEditingId(null);
+    alert('Cập nhật thành công!');
+  } catch (error) {
+    console.error('Lỗi khi cập nhật user:', error);
+  }
+};
+
+  const handleConfirmDelete = (id) => {
+    setConfirmDeleteId(id);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:5000/api/users/${confirmDeleteId}`);
+      await fetchUsers();
+      setConfirmDeleteId(null);
+      alert('Xóa người dùng thành công!');
+    } catch (error) {
+      console.error('Lỗi khi xoá user:', error);
+    }
   };
 
   const handleInputChange = (e, key) => {
@@ -113,12 +164,50 @@ export default function UserTable() {
     setNewUser({ ...newUser, [name]: value });
   };
 
-  const handleAddUser = () => {
-    const parsed = { ...newUser, user_id: parseInt(newUser.user_id) };
-    setData([...data, parsed]);
+  const handleAddUser = async () => {
+  const { name, email, password, phone_number } = newUser;
+
+  if (!name || !email || !password || !phone_number) {
+    alert('Vui lòng nhập đầy đủ thông tin');
+    return;
+  }
+
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    alert('Email không hợp lệ');
+    return;
+  }
+
+  const emailExists = data.some((user) => user.email === email);
+  if (emailExists) {
+    alert('Email này đã được sử dụng');
+    return;
+  }
+
+  const phoneRegex = /^0\d{9}$/;
+  if (!phoneRegex.test(phone_number)) {
+    alert('Số điện thoại không hợp lệ (phải gồm 10 số và bắt đầu bằng số 0)');
+    return;
+  }
+
+  try {
+    const currentDate = new Date().toISOString();
+    const payload = {
+      ...newUser,
+      created_at: currentDate
+    };
+
+    await axios.post('http://localhost:5000/api/users', payload);
+    await fetchUsers();
+
+    alert('Thêm người dùng thành công!');
     setOpenModal(false);
-    setNewUser({ user_id: '', name: '', email: '', password: '', phone_number: '', created_at: '' });
-  };
+    setNewUser({ name: '', email: '', password: '', phone_number: '' });
+  } catch (error) {
+    alert('Lỗi khi thêm người dùng', error);
+    console.error('Lỗi khi thêm user:', error);
+  }
+};
 
   const isSelected = (id) => selected.includes(id);
 
@@ -181,7 +270,7 @@ export default function UserTable() {
                     <Checkbox checked={isItemSelected} />
                   </TableCell>
                   {Object.keys(row).map((key) =>
-                    key !== 'user_id' && isEditing ? (
+                    key !== 'user_id' && key !== 'created_at' && isEditing ? (
                       <TableCell key={key}>
                         <TextField
                           value={editedRow[key]}
@@ -190,14 +279,27 @@ export default function UserTable() {
                         />
                       </TableCell>
                     ) : (
-                      <TableCell key={key}>{row[key]}</TableCell>
+                      <TableCell key={key}>
+                        {key === 'created_at'
+                          ? new Date(row[key]).toLocaleString('vi-VN', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })
+                          : row[key]}
+                      </TableCell>
                     )
                   )}
                   <TableCell>
                     {isEditing ? (
                       <IconButton onClick={handleSave}><SaveIcon /></IconButton>
                     ) : (
-                      <IconButton onClick={() => handleEdit(row.user_id)}><EditIcon /></IconButton>
+                      <>
+                        <IconButton onClick={() => handleEdit(row.user_id)}><EditIcon /></IconButton>
+                        <IconButton onClick={() => handleConfirmDelete(row.user_id)}><DeleteIcon /></IconButton>
+                      </>
                     )}
                   </TableCell>
                 </TableRow>
@@ -220,22 +322,60 @@ export default function UserTable() {
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box sx={modalStyle}>
           <Typography variant="h6" mb={2}>Thêm người dùng</Typography>
-          {['name', 'email', 'password', 'phone_number'].map((field) => (
-            <TextField
-              key={field}
-              name={field}
-              label={field}
-              fullWidth
-              margin="normal"
-              value={newUser[field]}
-              onChange={handleModalChange}
-            />
-          ))}
-          <Button fullWidth variant="contained" onClick={handleAddUser}>
-            Lưu
+          <TextField
+            label="Tên đăng nhập"
+            name="name"
+            fullWidth
+            margin="normal"
+            value={newUser.name}
+            onChange={handleModalChange}
+          />
+          <TextField
+            label="Email"
+            name="email"
+            fullWidth
+            margin="normal"
+            value={newUser.email}
+            onChange={handleModalChange}
+          />
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            fullWidth
+            margin="normal"
+            value={newUser.password}
+            onChange={handleModalChange}
+          />
+          <TextField
+            label="Số điện thoại"
+            name="phone_number"
+            fullWidth
+            margin="normal"
+            value={newUser.phone_number}
+            onChange={handleModalChange}
+          />
+          <Button fullWidth variant="contained" sx={{ mt: 2, bgcolor: 'orange' }} onClick={handleAddUser}>
+            LƯU
           </Button>
         </Box>
       </Modal>
+
+      <Dialog
+        open={!!confirmDeleteId}
+        onClose={() => setConfirmDeleteId(null)}
+      >
+        <DialogTitle>Xác nhận xoá</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có chắc chắn muốn xoá người dùng này không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeleteId(null)}>Huỷ</Button>
+          <Button onClick={handleDelete} color="error">Xoá</Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 }
