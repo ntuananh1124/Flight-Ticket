@@ -20,3 +20,12 @@ export const getFlightsAxios = async () => {
         console.log('flights err');
     }
 }
+
+export const getFlightPricesAxios = async () => {
+    try {
+        const res = await axios.get(`${hosting}/flight-prices`);
+        if (res && res.data) return res.data;
+    } catch (err) {
+        console.log('flights price err');
+    }
+}

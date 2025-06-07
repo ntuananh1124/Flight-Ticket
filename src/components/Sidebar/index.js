@@ -2,12 +2,18 @@ import { useState } from 'react';
 import { Drawer, List, ListItem, IconButton, Toolbar, AppBar, Typography, Button, Avatar, MenuItem, Menu } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import './Sidebar.scss';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
+import { deleteCookie, getCookie } from '../../helpers/cookie';
+// import { redirect } from "react-router";
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const openAnchor = Boolean(anchorEl);
+    const navigate = useNavigate();
+
+    const admin_name = getCookie('admin_name');
+    const admin_role = getCookie('admin_role');
 
     const handleClick = (event) => {
         // console.log(event.currentTarget);
@@ -30,11 +36,6 @@ export default function Sidebar() {
             style={{ width: 250 }}
         >
             <List>
-                {/* {['Trang chủ', 'Quản lý chuyến bay', 'Máy bay', 'Bookings', 'Hãng hàng không'].map((text) => (
-                    <ListItem button key={text}>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))} */}
                 <ListItem button>
                     <NavLink style={{width: '100%'}} to='/admin'>Hồ sơ</NavLink>
                 </ListItem>
@@ -59,6 +60,11 @@ export default function Sidebar() {
 
     const handleLogOut = () => {
         console.log('logged out');
+        deleteCookie('admin_id');
+        deleteCookie('admin_name');
+        deleteCookie('admin_role');
+        deleteCookie('admin_token');
+        navigate('/login');
     };
 
     function stringToColor(string) {
@@ -105,8 +111,8 @@ export default function Sidebar() {
                     </Typography>
                     <div className="admin">
                         <div className="admin__info" onClick={handleClick}>
-                            <Avatar className='avatar-custom' {...stringAvatar('Tuan Anh')} />
-                            <span className='admin__info__name'>Tuan Anh</span>
+                            <Avatar className='avatar-custom' {...stringAvatar('Admin 12')} />
+                            <span className='admin__info__name'>{admin_name}</span>
                         </div>
                         <Menu
                             id="basic-menu"
@@ -118,7 +124,7 @@ export default function Sidebar() {
                             }}
                         >
                             <MenuItem onClick={handleClose}>
-                                <span>Chức vụ: Quản lí</span>
+                                <span>Chức vụ: {admin_role}</span>
                             </MenuItem>
                         </Menu>
                         <Button color='primary' variant="outlined" style={{color: 'white'}} onClick={handleLogOut}>

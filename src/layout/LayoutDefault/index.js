@@ -1,5 +1,5 @@
 import './LayoutDefault.scss';
-import { Link, NavLink, Outlet } from 'react-router';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router';
 import Logo from '../../image/logoFT.png';
 import '../../styles/styles.scss';
 import Button from '@mui/material/Button';
@@ -7,10 +7,12 @@ import { Avatar, Menu, MenuItem, Paper } from '@mui/material';
 import { useState } from 'react';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { FaFacebookF } from "react-icons/fa";
+import { deleteCookie, getCookie } from '../../helpers/cookie';
 
 export default function LayoutDefault() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    const navigate = useNavigate();
 
     const handleClick = (event) => {
         // console.log(event.currentTarget);
@@ -46,8 +48,18 @@ export default function LayoutDefault() {
             children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
         };
     }
-    const token = 'ntuananh1124';
+    const token = getCookie('user_token');
     // const isAdmin = false;
+
+    const handleLogOut = () => {
+        deleteCookie('user_email');
+        deleteCookie('user_id');
+        deleteCookie('user_number');
+        deleteCookie('username');
+        deleteCookie('user_token');
+        navigate('login');
+    };
+
     return(
         <>
             <div className="content-wrapper">
@@ -128,9 +140,9 @@ export default function LayoutDefault() {
                                                 <Link to='/purchase'>Thanh toán</Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
-                                                <Link to='/user-history' >Lịch sử</Link>
+                                                <Link to='/user-history'>Lịch sử</Link>
                                             </MenuItem>
-                                            <MenuItem onClick={handleClose}>
+                                            <MenuItem onClick={handleLogOut}>
                                                 <Link to='/login'>Đăng xuất</Link>
                                             </MenuItem>
                                         </Menu>
@@ -139,7 +151,7 @@ export default function LayoutDefault() {
                             </> : <>
                                 <div className="header__untils__login-regis">
                                     <Button color='primary'>
-                                        <NavLink to='/login' color='primary'>ĐĂNG NHẬP</NavLink>
+                                        <NavLink to='/login' variant="contained" style={{color: 'white'}}>ĐĂNG NHẬP</NavLink>
                                     </Button>
                                     <Button color='primary' variant="contained">
                                         <NavLink to='/register' style={{color: 'white'}}>ĐĂNG KÍ</NavLink>

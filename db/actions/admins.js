@@ -77,4 +77,32 @@ try {
 }
 });
 
+// GET /admins/check?username=admin1&password=adminpass
+router.get('/check', async (req, res) => {
+    const { username, password } = req.query;
+
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Missing username or password parameter' });
+    }
+
+    try {
+        const pool = await sql.connect(dbConfig);
+        const request = pool.request();
+
+        request.input('username', sql.VarChar(100), username);
+        request.input('password', sql.VarChar(255), password);
+
+        const result = await request.query('SELECT admin_id, username, role FROM Admins WHERE username = @username AND password = @password');
+
+        if (result.recordset.length > 0) {
+            return res.json({ exists: true, admin: result.recordset[0] });
+        } else {
+            return res.json({ exists: false });
+        }
+    } catch (err) {
+        console.error('Error querying Admins:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 module.exports = router;

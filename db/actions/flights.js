@@ -92,11 +92,97 @@ res.status(500).send('Lỗi máy chủ');
 });
 
 // Search Flight:
-router.get("/api/flights", async (req, res) => {
-const { from, to, start } = req.query;
-const query = `SELECT * FROM flights WHERE departure_airport = ? AND arrival_airport = ? AND departure_date = ?` ;
-const [rows] = await db.execute(query, [from, to, start]);
-res.json(rows);
+router.get("/", async (req, res) => {
+    const { route_id, from, to, start, airline_id, limit, offset } = req.query;
+
+    try {
+        let whereClauses = [];
+        let params = [];
+
+        console.log("==== API /api/flights called ====");
+        console.log("Query params:", req.query);
+
+        if (route_id) {
+            whereClauses.push("f.route_id = ?");
+            params.push(route_id);
+        } else {
+            if (from) {
+                const [fromRows] = await db.execute(
+                    "SELECT airport_id FROM Airports WHERE code = ?",
+                    [from]
+                );
+                const fromAirport = fromRows[0];
+
+                if (!fromAirport) {
+                    console.log("=> Không tìm thấy sân bay FROM → trả []");
+                    return res.json([]);
+                }
+
+                whereClauses.push("r.from_airport = ?");
+                params.push(fromAirport.airport_id);
+            }
+
+            if (to) {
+                const [toRows] = await db.execute(
+                    "SELECT airport_id FROM Airports WHERE code = ?",
+                    [to]
+                );
+                const toAirport = toRows[0];
+
+                if (!toAirport) {
+                    console.log("=> Không tìm thấy sân bay TO → trả []");
+                    return res.json([]);
+                }
+
+                whereClauses.push("r.to_airport = ?");
+                params.push(toAirport.airport_id);
+            }
+        }
+
+        if (start) {
+            whereClauses.push("DATE(f.departure_time) = ?");
+            params.push(start);
+        }
+
+        if (airline_id) {
+            whereClauses.push("f.airline_id = ?");
+            params.push(airline_id);
+        }
+
+        const whereSQL = whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
+        let query = `
+            SELECT f.*, r.from_airport, r.to_airport
+            FROM Flights f
+            JOIN Routes r ON f.route_id = r.route_id
+            ${whereSQL}
+            ORDER BY f.departure_time ASC
+        `;
+
+        // Pagination
+        if (limit) {
+            query += ` LIMIT ?`;
+            params.push(parseInt(limit, 10));
+
+            if (offset) {
+                query += ` OFFSET ?`;
+                params.push(parseInt(offset, 10));
+            }
+        }
+
+        console.log("SQL Query:", query);
+        console.log("SQL Params:", params);
+
+        const [rows] = await db.execute(query, params);
+
+        console.log("Rows returned:", rows.length);
+
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
+
 
 module.exports = router;
