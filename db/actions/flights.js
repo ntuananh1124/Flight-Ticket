@@ -18,23 +18,27 @@ res.status(500).send('Lỗi máy chủ');
 // ➕ POST: Thêm chuyến bay mới
 router.post('/', async (req, res) => {
     const { airplane_id, route_id, departure_time, arrival_time, status, airline_id } = req.body;
+
     try {
         await sql.connect(dbConfig);
         const request = new sql.Request();
 
         request.input('airplane_id', sql.Int, airplane_id);
         request.input('route_id', sql.Int, route_id);
-        request.input('departure_time', sql.DateTime, new Date(departure_time)); // rất quan trọng: convert sang Date
+        request.input('departure_time', sql.DateTime, new Date(departure_time));
         request.input('arrival_time', sql.DateTime, new Date(arrival_time));
         request.input('status', sql.NVarChar(20), status);
         request.input('airline_id', sql.Int, airline_id);
 
-        await request.query(`
+        const result = await request.query(`
             INSERT INTO Flights (airplane_id, route_id, departure_time, arrival_time, status, airline_id)
+            OUTPUT INSERTED.flight_id
             VALUES (@airplane_id, @route_id, @departure_time, @arrival_time, @status, @airline_id)
         `);
 
-        res.status(201).send('Thêm chuyến bay thành công');
+        const flight_id = result.recordset[0].flight_id;
+
+        res.status(201).json({ flight_id }); // trả về flight_id cho FE dùng
 
     } catch (err) {
         console.error('Lỗi khi thêm chuyến bay:', err);
@@ -96,61 +100,70 @@ router.get("/", async (req, res) => {
     const { route_id, from, to, start, airline_id, limit, offset } = req.query;
 
     try {
+        const pool = await sql.connect(dbConfig);
+
         let whereClauses = [];
-        let params = [];
+        let request = pool.request();
 
         console.log("==== API /api/flights called ====");
         console.log("Query params:", req.query);
 
+        // Nếu có route_id
         if (route_id) {
-            whereClauses.push("f.route_id = ?");
-            params.push(route_id);
+            whereClauses.push("f.route_id = @route_id");
+            request.input("route_id", sql.Int, route_id);
         } else {
+            // Nếu có from
             if (from) {
-                const [fromRows] = await db.execute(
-                    "SELECT airport_id FROM Airports WHERE code = ?",
-                    [from]
-                );
-                const fromAirport = fromRows[0];
+                const fromResult = await pool.request()
+                    .input("fromCode", sql.VarChar, from)
+                    .query("SELECT airport_id FROM Airports WHERE code = @fromCode");
+
+                const fromAirport = fromResult.recordset[0];
 
                 if (!fromAirport) {
                     console.log("=> Không tìm thấy sân bay FROM → trả []");
                     return res.json([]);
                 }
 
-                whereClauses.push("r.from_airport = ?");
-                params.push(fromAirport.airport_id);
+                whereClauses.push("r.from_airport = @from_airport");
+                request.input("from_airport", sql.Int, fromAirport.airport_id);
             }
 
+            // Nếu có to
             if (to) {
-                const [toRows] = await db.execute(
-                    "SELECT airport_id FROM Airports WHERE code = ?",
-                    [to]
-                );
-                const toAirport = toRows[0];
+                const toResult = await pool.request()
+                    .input("toCode", sql.VarChar, to)
+                    .query("SELECT airport_id FROM Airports WHERE code = @toCode");
+
+                const toAirport = toResult.recordset[0];
 
                 if (!toAirport) {
                     console.log("=> Không tìm thấy sân bay TO → trả []");
                     return res.json([]);
                 }
 
-                whereClauses.push("r.to_airport = ?");
-                params.push(toAirport.airport_id);
+                whereClauses.push("r.to_airport = @to_airport");
+                request.input("to_airport", sql.Int, toAirport.airport_id);
             }
         }
 
+        // Nếu có start date
         if (start) {
-            whereClauses.push("DATE(f.departure_time) = ?");
-            params.push(start);
+            whereClauses.push("CAST(f.departure_time AS DATE) = @startDate");
+            request.input("startDate", sql.Date, start);
         }
 
+        // Nếu có airline_id
         if (airline_id) {
-            whereClauses.push("f.airline_id = ?");
-            params.push(airline_id);
+            whereClauses.push("f.airline_id = @airline_id");
+            request.input("airline_id", sql.Int, airline_id);
         }
 
+        // Build WHERE final
         const whereSQL = whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
 
+        // Build query
         let query = `
             SELECT f.*, r.from_airport, r.to_airport
             FROM Flights f
@@ -161,28 +174,22 @@ router.get("/", async (req, res) => {
 
         // Pagination
         if (limit) {
-            query += ` LIMIT ?`;
-            params.push(parseInt(limit, 10));
-
-            if (offset) {
-                query += ` OFFSET ?`;
-                params.push(parseInt(offset, 10));
-            }
+            query += " OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY";
+            request.input("limit", sql.Int, parseInt(limit, 10));
+            request.input("offset", sql.Int, parseInt(offset || 0, 10));
         }
 
         console.log("SQL Query:", query);
-        console.log("SQL Params:", params);
 
-        const [rows] = await db.execute(query, params);
+        const result = await request.query(query);
 
-        console.log("Rows returned:", rows.length);
+        console.log("Rows returned:", result.recordset.length);
 
-        res.json(rows);
+        res.json(result.recordset);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
 
 module.exports = router;

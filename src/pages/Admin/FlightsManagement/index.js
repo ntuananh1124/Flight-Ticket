@@ -73,7 +73,13 @@ export default function AirplaneTable() {
         status: '',
         airline: null
     });
+    const [economyPrice, setEconomyPrice] = useState('');
+    const [businessPrice, setBusinessPrice] = useState('');
+    const [firstPrice, setFirstPrice] = useState('');
 
+    const [editEconomyPrice, setEditEconomyPrice] = useState('');
+    const [editBusinessPrice, setEditBusinessPrice] = useState('');
+    const [editFirstPrice, setEditFirstPrice] = useState('');
 
     const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -103,7 +109,21 @@ export default function AirplaneTable() {
         setPage(0);
     };
 
-    const handleEdit = (id) => {
+    const [editFlightPrices, setEditFlightPrices] = useState({
+            economy_id: '',
+            business_id: '',
+            first_id: ''
+        });
+
+    const handleEdit = async (id) => {
+        const pricesRes = await axios.get(`http://localhost:5000/api/flight-prices?flight_id=${id}`);
+
+        setEditFlightPrices({
+            economy_id: pricesRes.data.find(p => p.class === 'Economy')?.id,
+            business_id: pricesRes.data.find(p => p.class === 'Business')?.id,
+            first_id: pricesRes.data.find(p => p.class === 'First')?.id
+        });
+
         const row = data.find((item) => item.flight_id === id);
 
         // Split departure_time & arrival_time
@@ -147,6 +167,18 @@ export default function AirplaneTable() {
                 arrival_time: arrivalDateTime,
                 status: editFormData.status,
                 airline_id: editFormData.airline?.airline_id
+            });
+
+            await axios.put(`http://localhost:5000/api/flight-prices/${editFlightPrices.economy_id}`, {
+                price: parseFloat(editEconomyPrice)
+            });
+
+            await axios.put(`http://localhost:5000/api/flight-prices/${editFlightPrices.business_id}`, {
+                price: parseFloat(editBusinessPrice)
+            });
+
+            await axios.put(`http://localhost:5000/api/flight-prices/${editFlightPrices.first_id}`, {
+                price: parseFloat(editFirstPrice)
             });
 
             alert('Cập nhật chuyến bay thành công');
@@ -246,6 +278,35 @@ export default function AirplaneTable() {
                 status: 'On Time',
                 airline_id: selectedAirline.airline_id
             });
+            // eslint-disable-next-line
+            const res1 = await axios.post('http://localhost:5000/api/flights', {
+                airplane_id: selectedAirplane.airplane_id,
+                route_id: selectedRoute.route_id,
+                departure_time: departureDateTime,
+                arrival_time: arrivalDateTime,
+                status: 'On Time',
+                airline_id: selectedAirline.airline_id
+            });
+
+            const newFlightId = res1.data?.flight_id; // backend cần trả về flight_id
+
+            await axios.post('http://localhost:5000/api/flight-prices', {
+                flight_id: newFlightId,
+                class: 'Economy',
+                price: parseFloat(economyPrice)
+            });
+
+            await axios.post('http://localhost:5000/api/flight-prices', {
+                flight_id: newFlightId,
+                class: 'Business',
+                price: parseFloat(businessPrice)
+            });
+
+            await axios.post('http://localhost:5000/api/flight-prices', {
+                flight_id: newFlightId,
+                class: 'First',
+                price: parseFloat(firstPrice)
+            });
 
             alert('Thêm chuyến bay thành công');
             setOpenModal(false);
@@ -335,25 +396,6 @@ export default function AirplaneTable() {
                 setRouteList(routesWithNames);
 
                 try {
-                    // debugger
-                    // const enrichedFlights = flightsAxios.map((flight) => {
-                    //     const airplane = airplanesAxios.find((a) => a.airplane_id === flight.airplane_id);
-                    //     const airline = airlinesAxios.find((a) => a.airline_id === flight.airline_id);
-                    //     // debugger
-                    //     const route = routesAxios.find((r) => r.route_id === flight.route_id);
-                    //     const getAirportName = (airportId) => {
-                    //         const airport = airportAxios.find((a) => a.airport_id === airportId);
-                    //         return airport ? airport.location : 'Unknown';
-                    //     }
-
-                    //     return {
-                    //         ...flight,
-                    //         airplane_name: airplane?.model || 'Unknown',
-                    //         airline_name: airline?.name || 'Unknown',
-                    //         route_name: route ? `${getAirportName(route.from_airport)} - ${getAirportName(route.to_airport)}` : 'Unknown',
-                    //     };
-                    // });
-
                     const enrichedFlights = enrichFlights(flightsAxios, airplanesAxios, airlinesAxios, routesAxios, airportAxios);
                     setData(enrichedFlights);
 
@@ -380,7 +422,6 @@ export default function AirplaneTable() {
             (airport) => Number(airport.airport_id) !== Number(departure.airport_id)
         );
     }, [airportList, departure]);
-    // console.log('textfield 2',filteredDestinationOptions);
     // eslint-disable-next-line
     const [deletingId, setDeletingId] = useState(null);
 
@@ -390,6 +431,7 @@ export default function AirplaneTable() {
 
         try {
             await axios.delete(`http://localhost:5000/api/flights/${id}`);
+            // await axios.delete(`http://localhost:5000/api/flight-prices/by-flight/${id}`);
             alert('Xoá chuyến bay thành công');
 
             // Reload flights list
@@ -581,6 +623,33 @@ export default function AirplaneTable() {
                                 renderInput={(params) => <TextField {...params} label="Hãng hàng không" />}
                             />}
                         </Grid>
+                        <Grid item size={4}>
+                            <TextField
+                                label="Giá Economy ($)"
+                                type="number"
+                                value={economyPrice}
+                                onChange={(e) => setEconomyPrice(e.target.value)}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item size={4}>
+                            <TextField
+                                label="Giá Business ($)"
+                                type="number"
+                                value={businessPrice}
+                                onChange={(e) => setBusinessPrice(e.target.value)}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item size={4}>
+                            <TextField
+                                label="Giá First ($)"
+                                type="number"
+                                value={firstPrice}
+                                onChange={(e) => setFirstPrice(e.target.value)}
+                                fullWidth
+                            />
+                        </Grid>
                     </Grid>
                     <Button style={{marginTop: '20px'}} fullWidth variant="contained" onClick={handleAddFlight}>Lưu</Button>
                 </Box>
@@ -673,6 +742,33 @@ export default function AirplaneTable() {
                                 <MenuItem value="Delayed">Delayed</MenuItem>
                                 <MenuItem value="Cancelled">Cancelled</MenuItem>
                             </TextField>
+                        </Grid>
+                        <Grid item size={4}>
+                            <TextField
+                                label="Giá Economy ($)"
+                                type="number"
+                                value={editEconomyPrice}
+                                onChange={(e) => setEditEconomyPrice(e.target.value)}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item size={4}>
+                            <TextField
+                                label="Giá Business ($)"
+                                type="number"
+                                value={editBusinessPrice}
+                                onChange={(e) => setEditBusinessPrice(e.target.value)}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item size={4}>
+                            <TextField
+                                label="Giá First ($)"
+                                type="number"
+                                value={editFirstPrice}
+                                onChange={(e) => setEditFirstPrice(e.target.value)}
+                                fullWidth
+                            />
                         </Grid>
                     </Grid>
                     <Button sx={{ mt: 2 }} fullWidth variant="contained" onClick={handleSave}>Lưu thay đổi</Button>

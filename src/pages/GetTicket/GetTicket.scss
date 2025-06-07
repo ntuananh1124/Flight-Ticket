@@ -20,10 +20,8 @@
 
             &__airline {
                 @include flex-center();
-                gap: 5px;
+                gap: 7px;
                 &__img {
-                    width: 30px;
-                    height: 30px;
 
                     & img {
                         width: 100%;
