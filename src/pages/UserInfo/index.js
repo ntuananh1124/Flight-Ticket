@@ -2,6 +2,7 @@ import { Button, Card, Grid, Switch, TextField } from '@mui/material';
 import './UserInfo.scss';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getCookie } from '../../helpers/cookie';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -19,7 +20,7 @@ export default function UserInfo() {
         phone_number: ''
     });
 
-    const userId = 1;
+    const userId = getCookie("user_id");
 
     useEffect(() => {
         const fetchUserInfo = async () => {
